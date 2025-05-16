@@ -15,8 +15,16 @@
   padding: 2rem;
   border-radius: var(--border-radius);
   margin-bottom: 2rem;
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   box-shadow: var(--shadow-md);
+  position: relative;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
 }
 
 .App-header h1 {
@@ -127,6 +135,44 @@ button:disabled {
   margin-right: 0.5rem;
   display: inline-block;
   min-width: 100px;
+}
+
+/* Tab Navigation */
+.tab-navigation {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tab-button {
+  padding: 0.75rem 1.5rem;
+  background-color: transparent;
+  color: var(--text-primary);
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: none;
+}
+
+.tab-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  transform: none;
+  box-shadow: none;
+}
+
+.tab-button.active {
+  color: var(--primary-color);
+  border-bottom: 3px solid var(--primary-color);
+  background-color: transparent;
+}
+
+.tab-button.active:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 /* Action Buttons Container */

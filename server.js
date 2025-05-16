@@ -123,6 +123,86 @@ app.post('/api/tasks', (req, res) => {
     }
 });
 
+// API endpoint to update a task by index
+app.put('/api/tasks/:index', (req, res) => {
+    try {
+        const taskIndex = parseInt(req.params.index);
+        const { task } = req.body;
+        
+        log(`Updating task at index ${taskIndex}:`, task);
+        
+        // Read existing tasks
+        let tasks = [];
+        if (fs.existsSync(tasksFilePath)) {
+            const fileContent = fs.readFileSync(tasksFilePath, 'utf8');
+            tasks = JSON.parse(fileContent);
+        }
+        
+        // Check if the index is valid
+        if (taskIndex < 0 || taskIndex >= tasks.length) {
+            return res.status(404).json({ error: 'Task not found' });
+        }
+        
+        // Check if this task already exists elsewhere in the array (to prevent duplicates)
+        const duplicateIndex = tasks.findIndex((existingTask, idx) => 
+            idx !== taskIndex && // Skip comparing with itself
+            existingTask.title === task.title && 
+            existingTask.description === task.description
+        );
+        
+        // If a duplicate exists, remove it
+        if (duplicateIndex !== -1) {
+            log(`Found duplicate task at index ${duplicateIndex}, removing it`);
+            tasks.splice(duplicateIndex, 1);
+        }
+        
+        // Update the task at the specified index
+        tasks[taskIndex] = task;
+        
+        // Write the updated tasks back to the file
+        fs.writeFileSync(tasksFilePath, JSON.stringify(tasks, null, 2), 'utf8');
+        log('Task updated successfully');
+        
+        res.json({ success: true, message: 'Task updated successfully' });
+    } catch (error) {
+        log('Error updating task: ' + error.message);
+        res.status(500).json({ error: 'Failed to update task' });
+    }
+});
+
+// API endpoint to delete a task by index
+app.delete('/api/tasks/:index', (req, res) => {
+    try {
+        const taskIndex = parseInt(req.params.index);
+        
+        log(`Deleting task at index ${taskIndex}`);
+        
+        // Read existing tasks
+        let tasks = [];
+        if (fs.existsSync(tasksFilePath)) {
+            const fileContent = fs.readFileSync(tasksFilePath, 'utf8');
+            tasks = JSON.parse(fileContent);
+        }
+        
+        // Check if the index is valid
+        if (taskIndex < 0 || taskIndex >= tasks.length) {
+            return res.status(404).json({ error: 'Task not found' });
+        }
+        
+        // Remove the task at the specified index
+        tasks.splice(taskIndex, 1);
+        
+        // Write the updated tasks back to the file
+        fs.writeFileSync(tasksFilePath, JSON.stringify(tasks, null, 2), 'utf8');
+        log('Task deleted successfully');
+        
+        res.json({ success: true, message: 'Task deleted successfully' });
+    } catch (error) {
+        log('Error deleting task: ' + error.message);
+        res.status(500).json({ error: 'Failed to delete task' });
+    }
+});
+
 // Serve static files from the React app in production
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, 'build')));

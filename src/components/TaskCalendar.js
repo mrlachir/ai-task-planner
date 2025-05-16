@@ -26,28 +26,22 @@ const TaskCalendar = ({ tasks }) => {
 
   // Parse ISO date string to Date object
   const parseISODate = (isoString) => {
+    // Create a date object without timezone adjustment
     return new Date(isoString);
   };
 
   // Check if a task falls on a specific date
   const taskFallsOnDate = (task, date) => {
     const taskStartDate = parseISODate(task.start_at);
-    const taskEndDate = parseISODate(task.end_at);
-    const taskDeadline = parseISODate(task.deadline);
     
     const dateStart = new Date(date);
-    dateStart.setHours(0, 0, 0, 0);
+    dateStart.setUTCHours(0, 0, 0, 0);
     
     const dateEnd = new Date(date);
-    dateEnd.setHours(23, 59, 59, 999);
+    dateEnd.setUTCHours(23, 59, 59, 999);
     
-    // Check if task starts, ends, or has deadline on this date
-    return (
-      (taskStartDate >= dateStart && taskStartDate <= dateEnd) ||
-      (taskEndDate >= dateStart && taskEndDate <= dateEnd) ||
-      (taskDeadline >= dateStart && taskDeadline <= dateEnd) ||
-      (taskStartDate < dateStart && taskEndDate > dateEnd) // Task spans over this date
-    );
+    // Only show task on its start date
+    return (taskStartDate >= dateStart && taskStartDate <= dateEnd);
   };
 
   // Get tasks for a specific date
@@ -59,8 +53,8 @@ const TaskCalendar = ({ tasks }) => {
   // Generate calendar data
   useEffect(() => {
     const generateCalendarData = () => {
-      const year = currentDate.getFullYear();
-      const month = currentDate.getMonth();
+      const year = currentDate.getUTCFullYear();
+      const month = currentDate.getUTCMonth();
       const daysInMonth = getDaysInMonth(year, month);
       const firstDayOfMonth = getFirstDayOfMonth(year, month);
       
@@ -105,11 +99,11 @@ const TaskCalendar = ({ tasks }) => {
   const navigatePrevious = () => {
     const newDate = new Date(currentDate);
     if (calendarView === 'month') {
-      newDate.setMonth(newDate.getMonth() - 1);
+      newDate.setUTCMonth(newDate.getUTCMonth() - 1);
     } else if (calendarView === 'week') {
-      newDate.setDate(newDate.getDate() - 7);
+      newDate.setUTCDate(newDate.getUTCDate() - 7);
     } else if (calendarView === 'day') {
-      newDate.setDate(newDate.getDate() - 1);
+      newDate.setUTCDate(newDate.getUTCDate() - 1);
     }
     setCurrentDate(newDate);
   };
@@ -118,11 +112,11 @@ const TaskCalendar = ({ tasks }) => {
   const navigateNext = () => {
     const newDate = new Date(currentDate);
     if (calendarView === 'month') {
-      newDate.setMonth(newDate.getMonth() + 1);
+      newDate.setUTCMonth(newDate.getUTCMonth() + 1);
     } else if (calendarView === 'week') {
-      newDate.setDate(newDate.getDate() + 7);
+      newDate.setUTCDate(newDate.getUTCDate() + 7);
     } else if (calendarView === 'day') {
-      newDate.setDate(newDate.getDate() + 1);
+      newDate.setUTCDate(newDate.getUTCDate() + 1);
     }
     setCurrentDate(newDate);
   };
@@ -146,14 +140,14 @@ const TaskCalendar = ({ tasks }) => {
   const renderWeekView = () => {
     // Get the start of the week (Sunday)
     const startOfWeek = new Date(currentDate);
-    startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
+    startOfWeek.setUTCDate(currentDate.getUTCDate() - currentDate.getUTCDay());
     
     const weekDays = [];
     
     // Generate 7 days starting from the start of the week
     for (let i = 0; i < 7; i++) {
       const date = new Date(startOfWeek);
-      date.setDate(startOfWeek.getDate() + i);
+      date.setUTCDate(startOfWeek.getUTCDate() + i);
       weekDays.push({
         date,
         tasks: getTasksForDate(date)
@@ -166,7 +160,7 @@ const TaskCalendar = ({ tasks }) => {
           {weekDays.map((day, index) => (
             <div key={index} className="calendar-week-day-header">
               <div className="calendar-day-name">{day.date.toLocaleString('default', { weekday: 'short' })}</div>
-              <div className="calendar-day-number">{day.date.getDate()}</div>
+              <div className="calendar-day-number">{day.date.getUTCDate()}</div>
             </div>
           ))}
         </div>
@@ -183,8 +177,8 @@ const TaskCalendar = ({ tasks }) => {
               {day.tasks.map((task, taskIndex) => {
                 const startTime = parseISODate(task.start_at);
                 const endTime = parseISODate(task.end_at);
-                const startHour = startTime.getHours() + startTime.getMinutes() / 60;
-                const endHour = endTime.getHours() + endTime.getMinutes() / 60;
+                const startHour = startTime.getUTCHours() + startTime.getUTCMinutes() / 60;
+                const endHour = endTime.getUTCHours() + endTime.getUTCMinutes() / 60;
                 const duration = endHour - startHour;
                 
                 // Only show tasks that start on this day
@@ -199,7 +193,7 @@ const TaskCalendar = ({ tasks }) => {
                     style={{
                       top: `${startHour * 60}px`,
                       height: `${duration * 60}px`,
-                      backgroundColor: getCategoryColor(task.category)
+                      backgroundColor: getUrgencyColor(task.urgency)
                     }}
                     title={`${task.title} (${formatTimeRange(startTime, endTime)})`}
                   >
@@ -223,7 +217,7 @@ const TaskCalendar = ({ tasks }) => {
       <div className="calendar-day-view">
         <div className="calendar-day-header">
           <div className="calendar-day-name">{currentDate.toLocaleString('default', { weekday: 'long' })}</div>
-          <div className="calendar-day-number">{currentDate.getDate()}</div>
+          <div className="calendar-day-number">{currentDate.getUTCDate()}</div>
         </div>
         <div className="calendar-day-body">
           <div className="calendar-time-slots">
@@ -237,8 +231,8 @@ const TaskCalendar = ({ tasks }) => {
             {dayTasks.map((task, index) => {
               const startTime = parseISODate(task.start_at);
               const endTime = parseISODate(task.end_at);
-              const startHour = startTime.getHours() + startTime.getMinutes() / 60;
-              const endHour = endTime.getHours() + endTime.getMinutes() / 60;
+              const startHour = startTime.getUTCHours() + startTime.getUTCMinutes() / 60;
+              const endHour = endTime.getUTCHours() + endTime.getUTCMinutes() / 60;
               const duration = endHour - startHour;
               
               return (
@@ -248,7 +242,7 @@ const TaskCalendar = ({ tasks }) => {
                   style={{
                     top: `${startHour * 60}px`,
                     height: `${duration * 60}px`,
-                    backgroundColor: getCategoryColor(task.category)
+                    backgroundColor: getUrgencyColor(task.urgency)
                   }}
                   title={`${task.title} (${formatTimeRange(startTime, endTime)})`}
                 >
@@ -266,10 +260,15 @@ const TaskCalendar = ({ tasks }) => {
 
   // Format time range (e.g., "9:00 AM - 10:00 AM")
   const formatTimeRange = (startTime, endTime) => {
-    return `${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    // Ensure we're working with Date objects
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+    
+    // Use UTC time to prevent timezone adjustments
+    return `${start.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', timeZone: 'UTC'})} - ${end.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', timeZone: 'UTC'})}`;
   };
 
-  // Get color based on task category
+  // Get color based on task category (kept for reference)
   const getCategoryColor = (category) => {
     const colors = {
       'Academics': '#4285F4', // Blue
@@ -283,6 +282,19 @@ const TaskCalendar = ({ tasks }) => {
     };
     
     return colors[category] || colors['Other'];
+  };
+
+  // Get color based on task urgency/priority
+  const getUrgencyColor = (urgency) => {
+    const level = parseInt(urgency) || 3;
+    switch(level) {
+      case 5: return '#DB4437'; // Red - Highest urgency
+      case 4: return '#F4B400'; // Orange/Yellow - High urgency
+      case 3: return '#4285F4'; // Blue - Medium urgency
+      case 2: return '#0F9D58'; // Green - Low urgency
+      case 1: return '#9E9E9E'; // Grey - Lowest urgency
+      default: return '#4285F4'; // Blue - Default
+    }
   };
 
   return (
@@ -348,7 +360,7 @@ const TaskCalendar = ({ tasks }) => {
                           <div 
                             key={taskIndex} 
                             className="calendar-task-item"
-                            style={{ backgroundColor: getCategoryColor(task.category) }}
+                            style={{ backgroundColor: getUrgencyColor(task.urgency) }}
                             title={task.title}
                           >
                             {task.title}

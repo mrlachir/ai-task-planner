@@ -1,9 +1,64 @@
 // src/TaskList.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-function TaskList({ tasks }) {
+function TaskList({ tasks, onUpdateTask, onDeleteTask }) {
+    const [editingTask, setEditingTask] = useState(null);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [editFormData, setEditFormData] = useState({});
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [taskToDelete, setTaskToDelete] = useState(null);
     const [sortBy, setSortBy] = useState('deadline');
     const [filterCategory, setFilterCategory] = useState('all');
+    
+    // Handle edit button click
+    const handleEditClick = (task, index) => {
+        setEditingTask({ ...task, index });
+        setEditFormData({ ...task });
+        setShowEditModal(true);
+    };
+    
+    // Handle form field changes
+    const handleEditFormChange = (e) => {
+        const { name, value } = e.target;
+        setEditFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+    
+    // Handle form submission
+    const handleEditSubmit = (e) => {
+        e.preventDefault();
+        
+        // Convert datetime-local input values to ISO strings
+        const updatedTask = {
+            ...editFormData,
+            start_at: convertLocalToISO(editFormData.start_at),
+            end_at: convertLocalToISO(editFormData.end_at),
+            deadline: convertLocalToISO(editFormData.deadline),
+            urgency: parseInt(editFormData.urgency) || 3
+        };
+        
+        if (onUpdateTask) {
+            onUpdateTask(editingTask.index, updatedTask);
+        }
+        
+        setShowEditModal(false);
+    };
+    
+    // Handle delete button click
+    const handleDeleteClick = (task, index) => {
+        setTaskToDelete({ ...task, index });
+        setShowDeleteConfirm(true);
+    };
+    
+    // Confirm task deletion
+    const confirmDelete = () => {
+        if (onDeleteTask && taskToDelete) {
+            onDeleteTask(taskToDelete.index);
+        }
+        setShowDeleteConfirm(false);
+    };
 
     if (!tasks || tasks.length === 0) {
         return (
@@ -123,6 +178,27 @@ function TaskList({ tasks }) {
                                 </div>
                             </div>
                             
+                            <div className="task-actions">
+                                <button 
+                                    className="task-action-btn edit-btn"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleEditClick(task, index);
+                                    }}
+                                >
+                                    <i className="fas fa-edit"></i> Edit
+                                </button>
+                                <button 
+                                    className="task-action-btn delete-btn"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDeleteClick(task, index);
+                                    }}
+                                >
+                                    <i className="fas fa-trash-alt"></i> Delete
+                                </button>
+                            </div>
+                            
                             <div className="task-times">
                                 <div className="task-time-item">
                                     <span className="task-time-label">Start:</span>
@@ -141,6 +217,132 @@ function TaskList({ tasks }) {
                     </div>
                 ))}
             </div>
+
+            {/* Edit Task Modal */}
+            {showEditModal && (
+                <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h3>Edit Task</h3>
+                            <button className="modal-close" onClick={() => setShowEditModal(false)}>&times;</button>
+                        </div>
+                        <div className="modal-body">
+                            <form onSubmit={handleEditSubmit}>
+                                <div className="form-group">
+                                    <label htmlFor="edit-title">Title</label>
+                                    <input
+                                        id="edit-title"
+                                        type="text"
+                                        name="title"
+                                        value={editFormData.title || ''}
+                                        onChange={handleEditFormChange}
+                                        required
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="edit-description">Description</label>
+                                    <textarea
+                                        id="edit-description"
+                                        name="description"
+                                        value={editFormData.description || ''}
+                                        onChange={handleEditFormChange}
+                                        rows="3"
+                                    ></textarea>
+                                </div>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label htmlFor="edit-category">Category</label>
+                                        <input
+                                            id="edit-category"
+                                            type="text"
+                                            name="category"
+                                            value={editFormData.category || ''}
+                                            onChange={handleEditFormChange}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="edit-urgency">Urgency (1-5)</label>
+                                        <select
+                                            id="edit-urgency"
+                                            name="urgency"
+                                            value={editFormData.urgency || '3'}
+                                            onChange={handleEditFormChange}
+                                        >
+                                            <option value="1">1 - Minimal</option>
+                                            <option value="2">2 - Low</option>
+                                            <option value="3">3 - Medium</option>
+                                            <option value="4">4 - High</option>
+                                            <option value="5">5 - Critical</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="edit-start-at">Start Time</label>
+                                    <input
+                                        id="edit-start-at"
+                                        type="datetime-local"
+                                        name="start_at"
+                                        value={formatDateForInput(editFormData.start_at)}
+                                        onChange={handleEditFormChange}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="edit-end-at">End Time</label>
+                                    <input
+                                        id="edit-end-at"
+                                        type="datetime-local"
+                                        name="end_at"
+                                        value={formatDateForInput(editFormData.end_at)}
+                                        onChange={handleEditFormChange}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="edit-deadline">Deadline</label>
+                                    <input
+                                        id="edit-deadline"
+                                        type="datetime-local"
+                                        name="deadline"
+                                        value={formatDateForInput(editFormData.deadline)}
+                                        onChange={handleEditFormChange}
+                                    />
+                                </div>
+                                <div className="form-actions">
+                                    <button type="button" onClick={() => setShowEditModal(false)} className="cancel-btn">
+                                        Cancel
+                                    </button>
+                                    <button type="submit" className="save-btn">
+                                        Save Changes
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {showDeleteConfirm && (
+                <div className="modal-overlay" onClick={() => setShowDeleteConfirm(false)}>
+                    <div className="modal-content delete-confirm-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h3>Confirm Deletion</h3>
+                            <button className="modal-close" onClick={() => setShowDeleteConfirm(false)}>&times;</button>
+                        </div>
+                        <div className="modal-body">
+                            <p>Are you sure you want to delete the task <strong>"{taskToDelete?.title}"</strong>?</p>
+                            <p className="warning-text">This action cannot be undone.</p>
+                            <div className="form-actions">
+                                <button onClick={() => setShowDeleteConfirm(false)} className="cancel-btn">
+                                    Cancel
+                                </button>
+                                <button onClick={confirmDelete} className="delete-btn">
+                                    Delete Task
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <style jsx>{`
                 .task-list-container {
@@ -270,6 +472,195 @@ function TaskList({ tasks }) {
                     min-width: 70px;
                 }
                 
+                .task-actions {
+                    display: flex;
+                    justify-content: flex-end;
+                    gap: 0.5rem;
+                    margin-top: 0.5rem;
+                    padding-top: 0.5rem;
+                    border-top: 1px dashed var(--border-color);
+                }
+                
+                .task-action-btn {
+                    padding: 0.3rem 0.6rem;
+                    font-size: 0.8rem;
+                    background-color: transparent;
+                    color: var(--text-secondary);
+                    border: 1px solid var(--border-color);
+                    border-radius: var(--border-radius);
+                    cursor: pointer;
+                    transition: all 0.2s;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.3rem;
+                    box-shadow: none;
+                }
+                
+                .task-action-btn:hover {
+                    background-color: var(--bg-tertiary);
+                    transform: none;
+                    box-shadow: none;
+                }
+                
+                .edit-btn:hover {
+                    color: var(--primary-color);
+                    border-color: var(--primary-color);
+                }
+                
+                .delete-btn:hover {
+                    color: var(--error-color);
+                    border-color: var(--error-color);
+                }
+                
+                /* Modal Styles */
+                .modal-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: rgba(0, 0, 0, 0.5);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 1000;
+                }
+                
+                .modal-content {
+                    background-color: var(--bg-primary);
+                    border-radius: var(--border-radius);
+                    width: 90%;
+                    max-width: 600px;
+                    max-height: 90vh;
+                    overflow-y: auto;
+                    box-shadow: var(--shadow-lg);
+                    animation: modalFadeIn 0.3s;
+                }
+                
+                .delete-confirm-modal {
+                    max-width: 400px;
+                }
+                
+                @keyframes modalFadeIn {
+                    from { opacity: 0; transform: translateY(-20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                
+                .modal-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 1rem 1.5rem;
+                    border-bottom: 1px solid var(--border-color);
+                }
+                
+                .modal-header h3 {
+                    margin: 0;
+                    color: var(--text-primary);
+                }
+                
+                .modal-close {
+                    background: none;
+                    border: none;
+                    font-size: 1.5rem;
+                    cursor: pointer;
+                    color: var(--text-light);
+                    padding: 0;
+                    box-shadow: none;
+                }
+                
+                .modal-close:hover {
+                    color: var(--text-primary);
+                    background: none;
+                    transform: none;
+                    box-shadow: none;
+                }
+                
+                .modal-body {
+                    padding: 1.5rem;
+                }
+                
+                .form-group {
+                    margin-bottom: 1rem;
+                }
+                
+                .form-row {
+                    display: flex;
+                    gap: 1rem;
+                    margin-bottom: 1rem;
+                }
+                
+                .form-row .form-group {
+                    flex: 1;
+                    margin-bottom: 0;
+                }
+                
+                .form-group label {
+                    display: block;
+                    margin-bottom: 0.5rem;
+                    font-weight: 500;
+                    color: var(--text-primary);
+                }
+                
+                .form-group input,
+                .form-group textarea,
+                .form-group select {
+                    width: 100%;
+                    padding: 0.75rem;
+                    border: 1px solid var(--border-color);
+                    border-radius: var(--border-radius);
+                    font-size: 1rem;
+                    background-color: var(--bg-secondary);
+                    color: var(--text-primary);
+                    font-family: inherit;
+                }
+                
+                .form-group input:focus,
+                .form-group textarea:focus,
+                .form-group select:focus {
+                    outline: none;
+                    border-color: var(--primary-color);
+                    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+                }
+                
+                .form-actions {
+                    display: flex;
+                    justify-content: flex-end;
+                    gap: 1rem;
+                    margin-top: 1.5rem;
+                }
+                
+                .cancel-btn {
+                    background-color: var(--bg-tertiary);
+                    color: var(--text-primary);
+                }
+                
+                .cancel-btn:hover {
+                    background-color: var(--bg-tertiary-dark);
+                }
+                
+                .save-btn {
+                    background-color: var(--primary-color);
+                }
+                
+                .save-btn:hover {
+                    background-color: var(--primary-dark);
+                }
+                
+                .delete-btn {
+                    background-color: var(--error-color);
+                }
+                
+                .delete-btn:hover {
+                    background-color: var(--error-dark);
+                }
+                
+                .warning-text {
+                    color: var(--error-color);
+                    font-style: italic;
+                    margin-top: 0.5rem;
+                }
+                
                 .empty-state {
                     margin-top: 2rem;
                 }
@@ -326,16 +717,46 @@ function TaskList({ tasks }) {
 function formatISODateTime(isoString) {
     if (!isoString) return 'N/A';
     try {
+        // Parse the ISO string directly without automatic timezone conversion
         const date = new Date(isoString);
+        
+        // Create options with timeZone: 'UTC' to prevent local timezone adjustment
         const options = {
             year: 'numeric', month: 'short', day: 'numeric',
             hour: '2-digit', minute: '2-digit',
+            timeZone: 'UTC',
             timeZoneName: 'short'
         };
+        
         return date.toLocaleDateString(undefined, options);
     } catch (error) {
         console.error("Error formatting date:", error, isoString);
         return isoString; // Return the original if formatting fails
+    }
+}
+
+// Format date for datetime-local input
+function formatDateForInput(dateString) {
+    if (!dateString) return '';
+    try {
+        const date = new Date(dateString);
+        // Format as YYYY-MM-DDThh:mm
+        return date.toISOString().slice(0, 16);
+    } catch (error) {
+        console.error("Error formatting date for input:", error, dateString);
+        return '';
+    }
+}
+
+// Convert local datetime-local input value to ISO string
+function convertLocalToISO(localDateString) {
+    if (!localDateString) return null;
+    try {
+        const date = new Date(localDateString);
+        return date.toISOString();
+    } catch (error) {
+        console.error("Error converting local date to ISO:", error, localDateString);
+        return null;
     }
 }
 

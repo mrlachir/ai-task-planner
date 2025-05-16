@@ -4,6 +4,7 @@ import axios from 'axios'; // Import axios
 import TaskInput from './components/TaskInput';
 import TaskList from './components/TaskList';
 import TaskCalendar from './components/TaskCalendar';
+import Notifications from './components/Notifications';
 import './App.css';
 
 const apiKey = 'AIzaSyAbkug1K5m_SydfEaFA3PdeqtO6wESv9Cw'; // **REPLACE WITH YOUR ACTUAL API KEY**
@@ -189,6 +190,60 @@ function App() {
         }
     };
 
+    // Handle updating a task
+    const handleUpdateTask = async (index, updatedTask) => {
+        try {
+            setSaveStatus('Updating task...');
+            
+            // Create a copy of the tasks array
+            const updatedTasks = [...tasks];
+            
+            // Update the task at the specified index
+            updatedTasks[index] = updatedTask;
+            
+            // Update the tasks in the backend
+            const response = await axios.put(`http://localhost:3001/api/tasks/${index}`, { task: updatedTask });
+            
+            if (response.data.success) {
+                // Update the tasks state with the updated tasks
+                setTasks(updatedTasks);
+                setSaveStatus('Task updated successfully!');
+            } else {
+                throw new Error(response.data.error || 'Failed to update task');
+            }
+            
+            setTimeout(() => setSaveStatus(''), 3000);
+        } catch (error) {
+            console.error('Error updating task:', error);
+            setSaveStatus('Error updating task: ' + (error.response?.data?.error || error.message));
+            setTimeout(() => setSaveStatus(''), 3000);
+        }
+    };
+    
+    // Handle deleting a task
+    const handleDeleteTask = async (index) => {
+        try {
+            setSaveStatus('Deleting task...');
+            
+            // Delete the task from the backend
+            const response = await axios.delete(`http://localhost:3001/api/tasks/${index}`);
+            
+            if (response.data.success) {
+                // Reload tasks from the backend to ensure indices are synchronized
+                await loadTasksFromBackend();
+                setSaveStatus('Task deleted successfully!');
+            } else {
+                throw new Error(response.data.error || 'Failed to delete task');
+            }
+            
+            setTimeout(() => setSaveStatus(''), 3000);
+        } catch (error) {
+            console.error('Error deleting task:', error);
+            setSaveStatus('Error deleting task: ' + (error.response?.data?.error || error.message));
+            setTimeout(() => setSaveStatus(''), 3000);
+        }
+    };
+
     // Manual export to file for user convenience (downloads current client-side tasks)
     const handleExportToFile = () => {
         if (tasks.length > 0) {
@@ -238,6 +293,9 @@ function App() {
         <div className="App">
             <header className="App-header">
                 <h1>AI Task Planner</h1>
+                <div className="header-right">
+                    <Notifications tasks={tasks} />
+                </div>
             </header>
             <main>
                 <TaskInput onAnalyze={handleAnalyzeText} />
@@ -261,7 +319,11 @@ function App() {
                 </div>
                 
                 {activeTab === 'list' ? (
-                    <TaskList tasks={tasks} />
+                    <TaskList 
+                        tasks={tasks} 
+                        onUpdateTask={handleUpdateTask}
+                        onDeleteTask={handleDeleteTask}
+                    />
                 ) : (
                     <TaskCalendar tasks={tasks} />
                 )}
