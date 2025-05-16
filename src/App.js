@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // Import axios
 import TaskInput from './components/TaskInput';
 import TaskList from './components/TaskList';
+import TaskCalendar from './components/TaskCalendar';
 import './App.css';
 
 const apiKey = 'AIzaSyAbkug1K5m_SydfEaFA3PdeqtO6wESv9Cw'; // **REPLACE WITH YOUR ACTUAL API KEY**
@@ -14,6 +15,7 @@ function App() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [saveStatus, setSaveStatus] = useState('');
+    const [activeTab, setActiveTab] = useState('list'); // 'list' or 'calendar'
 
     // Function to save tasks to the backend JSON file
     const saveTasksToBackend = async (tasksToSave) => {
@@ -95,7 +97,7 @@ function App() {
         // Or, more robustly, update it when tasks are set by AI analysis
         // For now, this simple update is fine, but could be refined if tasks can be modified elsewhere.
         // prevTasksLengthRef.current = tasks.length; // This will be updated in handleAnalyzeText
-    }, [tasks]);
+    }, [tasks, saveTasksToBackend]);
 
     const handleAnalyzeText = async (text) => {
         if (!text.trim()) {
@@ -242,7 +244,28 @@ function App() {
                 {/* { <p className="loading-message">Loading tasks...</p>} */}
                 {error && <p className="error-message">Error: {error}</p>}
                 {saveStatus && <p className="save-status-message">{saveStatus}</p>}
-                <TaskList tasks={tasks} />
+                
+                <div className="tab-navigation">
+                    <button 
+                        className={`tab-button ${activeTab === 'list' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('list')}
+                    >
+                        Task List
+                    </button>
+                    <button 
+                        className={`tab-button ${activeTab === 'calendar' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('calendar')}
+                    >
+                        Calendar View
+                    </button>
+                </div>
+                
+                {activeTab === 'list' ? (
+                    <TaskList tasks={tasks} />
+                ) : (
+                    <TaskCalendar tasks={tasks} />
+                )}
+                
                 <div className="actions-container">
                     <button onClick={handleExportToFile} className="action-button export-button">
                         Export Current Tasks to File
