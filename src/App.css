@@ -1,123 +1,276 @@
 /* src/App.css */
-.app-container {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 20px;
-  background-color: #f4f7f6;
-  color: #333;
+.App {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-h1 {
-  color: #2c3e50;
+/* Header Styles */
+.App-header {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  color: white;
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  margin-bottom: 2rem;
   text-align: center;
-  margin-bottom: 20px;
+  box-shadow: var(--shadow-md);
 }
 
-p {
-  margin-bottom: 15px;
-  color: #555;
+.App-header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 0.5px;
 }
 
+/* Main Content Area */
+main {
+  flex: 1;
+  background-color: var(--bg-primary);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 2rem;
+}
+
+/* Task Input Component */
 textarea {
-  width: calc(100% - 16px);
+  width: 100%;
   min-height: 150px;
-  margin-bottom: 20px;
-  padding: 10px;
-  box-sizing: border-box;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 16px;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: var(--transition);
+  background-color: var(--bg-secondary);
 }
 
+textarea:focus {
+  outline: none;
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+}
+
+/* Button Styles */
 button {
-  padding: 12px 20px;
+  padding: 0.75rem 1.5rem;
   cursor: pointer;
-  background-color: #3498db;
+  background-color: var(--primary-color);
   color: white;
   border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-  margin-right: 10px;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: 500;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: var(--shadow-sm);
 }
 
 button:hover {
-  background-color: #2980b9;
+  background-color: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+button:active {
+  transform: translateY(0);
 }
 
 button:disabled {
-  background-color: #95a5a6;
+  background-color: var(--text-light);
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
-.task-actions {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.task-actions button:nth-child(1) {
-  background-color: #27ae60; /* Green for save */
-}
-
-.task-actions button:nth-child(1):hover:not(:disabled) {
-  background-color: #219653;
-}
-
-.task-actions button:nth-child(2) {
-  background-color: #e67e22; /* Orange for load */
-}
-
-.task-actions button:nth-child(2):hover {
-  background-color: #d35400;
-}
-
-.task-actions button:nth-child(3) {
-  background-color: #9b59b6; /* Purple for download */
-}
-
-.task-actions button:nth-child(3):hover:not(:disabled) {
-  background-color: #8e44ad;
-}
-
+/* Task List Styles */
 .task-item {
-  margin-bottom: 20px;
-  padding: 15px;
-  border: 1px solid #ecf0f1;
-  border-radius: 5px;
-  background-color: #f9fafa;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: var(--bg-primary);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.task-item:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.task-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background-color: var(--primary-color);
 }
 
 .task-item strong {
-  font-weight: bold;
-  color: #34495e;
-  margin-right: 5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-right: 0.5rem;
+  display: inline-block;
+  min-width: 100px;
 }
 
-.error {
-  background-color: #ffebee;
-  border-color: #ef9a9a;
-  color: #d32f2f;
-  padding: 10px;
-  border-radius: 5px;
+/* Action Buttons Container */
+.actions-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+  justify-content: center;
 }
 
-.time-display {
-  font-family: monospace;
-  font-size: 1em;
-  color: #555;
+.action-button {
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: 500;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: var(--shadow-sm);
 }
 
-.save-status {
+.export-button {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.export-button:hover {
+  background-color: #3ab7dc;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.import-button {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.import-button:hover {
+  background-color: #e01e79;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Status Messages */
+.error-message {
+  background-color: rgba(244, 67, 54, 0.1);
+  border: 1px solid var(--error-color);
+  color: var(--error-color);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.save-status-message {
+  background-color: rgba(76, 175, 80, 0.1);
+  border: 1px solid var(--success-color);
+  color: var(--success-color);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  margin-bottom: 1.5rem;
+  font-weight: 500;
   text-align: center;
-  color: #27ae60;
-  font-weight: bold;
-  margin: 10px 0;
   animation: fadeIn 0.3s ease-in;
 }
 
+.loading-message {
+  text-align: center;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin: 1.5rem 0;
+}
+
+.time-display {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  background-color: var(--bg-tertiary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+/* Footer Styles */
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .App-header {
+    padding: 1.5rem;
+  }
+  
+  .App-header h1 {
+    font-size: 2rem;
+  }
+  
+  main {
+    padding: 1.5rem;
+  }
+  
+  .task-item strong {
+    min-width: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .App {
+    padding: 10px;
+  }
+  
+  .App-header {
+    padding: 1rem;
+  }
+  
+  .App-header h1 {
+    font-size: 1.75rem;
+  }
+  
+  main {
+    padding: 1rem;
+  }
+  
+  .actions-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .action-button {
+    width: 100%;
+  }
 }

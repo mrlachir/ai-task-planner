@@ -1,26 +1,8 @@
 [
   {
     "title": "Finish Math Assignment",
-    "description": "Complete math assignment.",
-    "category": "Academic",
-    "urgency": 5,
-    "start_at": "2025-05-18T18:09:42Z",
-    "end_at": "2025-05-18T19:09:42Z",
-    "deadline": "2025-05-20T23:59:59Z"
-  },
-  {
-    "title": "Study session",
-    "description": "Attend the study session",
-    "category": "General",
-    "urgency": 3,
-    "start_at": "2025-05-21T00:00:00Z",
-    "end_at": "2025-05-21T01:00:00Z",
-    "deadline": "2025-05-16T23:59:59Z"
-  },
-  {
-    "title": "Finish Math Assignment",
-    "description": "Complete math assignment.",
-    "category": "School",
+    "description": "Complete the math assignment.",
+    "category": "Academics",
     "urgency": 5,
     "start_at": "2025-05-18T18:00:00Z",
     "end_at": "2025-05-18T19:00:00Z",
@@ -28,128 +10,20 @@
   },
   {
     "title": "Reply to Internship Email",
-    "description": "Reply to internship email.",
-    "category": "Job",
+    "description": "Reply to the internship email.",
+    "category": "Professional",
     "urgency": 2,
-    "start_at": "2025-05-16T13:34:27Z",
-    "end_at": "2025-05-16T14:34:27Z",
+    "start_at": "2025-05-16T14:20:33Z",
+    "end_at": "2025-05-16T15:20:33Z",
     "deadline": "2025-05-17T23:59:59Z"
   },
   {
     "title": "Schedule Study Session",
     "description": "Schedule a study session.",
-    "category": "Study",
+    "category": "Academics",
     "urgency": 3,
     "start_at": "2025-05-19T09:00:00Z",
-    "end_at": "2025-05-19T10:00:00Z",
+    "end_at": "2025-05-19T14:00:00Z",
     "deadline": "2025-05-16T23:59:59Z"
-  },
-  {
-    "title": "Finish Project",
-    "description": "Finish project",
-    "category": "General",
-    "urgency": 5,
-    "start_at": "2025-05-16T14:00:46Z",
-    "end_at": "2025-05-19T17:00:46Z",
-    "deadline": "2025-05-16T23:59:59Z"
-  },
-  {
-    "title": "Reply to John's Email",
-    "description": "Reply to John's email",
-    "category": "General",
-    "urgency": 3,
-    "start_at": "2025-05-17T14:00:46Z",
-    "end_at": "2025-05-17T15:00:46Z",
-    "deadline": "2025-05-16T23:59:59Z"
-  },
-  {
-    "title": "Study Session",
-    "description": "Study session",
-    "category": "General",
-    "urgency": 3,
-    "start_at": "2025-05-21T14:00:46Z",
-    "end_at": "2025-05-21T15:00:46Z",
-    "deadline": "2025-05-16T23:59:59Z"
-  },
-  {
-    "title": "Finish report",
-    "description": "Complete the report.",
-    "category": "General",
-    "urgency": 5,
-    "start_at": "2025-05-16T14:02:58Z",
-    "end_at": "2025-05-19T17:00:00Z",
-    "deadline": "2025-05-16T23:59:59Z"
-  },
-  {
-    "title": "Reply to John's email",
-    "description": "Respond to John's email.",
-    "category": "General",
-    "urgency": 3,
-    "start_at": "2025-05-17T14:02:58Z",
-    "end_at": "2025-05-17T15:02:58Z",
-    "deadline": "2025-05-16T23:59:59Z"
-  },
-  {
-    "title": "Study session",
-    "description": "Attend the study session.",
-    "category": "General",
-    "urgency": 3,
-    "start_at": "2025-05-21T14:02:58Z",
-    "end_at": "2025-05-21T15:02:58Z",
-    "deadline": "2025-05-16T23:59:59Z"
-  },
-  {
-    "title": "Finish report",
-    "description": "Finish report by Monday 5 PM",
-    "category": "General",
-    "urgency": 4,
-    "start_at": "2025-05-16T14:05:38Z",
-    "end_at": "2025-05-19T17:00:00Z",
-    "deadline": "2025-05-19T17:00:00Z"
-  },
-  {
-    "title": "Reply to John's email",
-    "description": "Reply to John's email",
-    "category": "General",
-    "urgency": 3,
-    "start_at": "2025-05-16T14:05:38Z",
-    "end_at": "2025-05-17T14:05:38Z",
-    "deadline": "2025-05-16T23:59:59Z"
-  },
-  {
-    "title": "Study session",
-    "description": "Study session",
-    "category": "General",
-    "urgency": 3,
-    "start_at": "2025-05-21T00:00:00Z",
-    "end_at": "2025-05-21T01:00:00Z",
-    "deadline": "2025-05-16T23:59:59Z"
-  },
-  {
-    "title": "Finish report",
-    "description": "Finish report",
-    "category": "General",
-    "urgency": 5,
-    "start_at": "2025-05-16T14:06:02Z",
-    "end_at": "2025-05-16T15:06:02Z",
-    "deadline": "2025-05-19T17:00:00Z"
-  },
-  {
-    "title": "Reply to John's email",
-    "description": "Reply to John's email",
-    "category": "General",
-    "urgency": 3,
-    "start_at": "2025-05-16T14:06:02Z",
-    "end_at": "2025-05-16T15:06:02Z",
-    "deadline": "2025-05-17T17:00:00Z"
-  },
-  {
-    "title": "Study session",
-    "description": "Study session",
-    "category": "General",
-    "urgency": 3,
-    "start_at": "2025-05-16T14:06:02Z",
-    "end_at": "2025-05-16T15:06:02Z",
-    "deadline": "2025-05-21T17:00:00Z"
   }
 ]
