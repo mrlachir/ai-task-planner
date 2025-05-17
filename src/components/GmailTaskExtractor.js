@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import '../styles/GmailTaskExtractor.css';
 
-const GmailTaskExtractor = ({ onExtractTasks, onUserAuth, onViewTasks, currentUser }) => {
+const GmailTaskExtractor = ({ onExtractTasks, onUserAuth, onViewTasks, currentUser, onLogout }) => {
     const [isAuthorized, setIsAuthorized] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -14,7 +14,9 @@ const GmailTaskExtractor = ({ onExtractTasks, onUserAuth, onViewTasks, currentUs
     const [lastScanTime, setLastScanTime] = useState(null);
     const [scannedEmails, setScannedEmails] = useState([]);
     const [autoScanEnabled, setAutoScanEnabled] = useState(true);
+    const [userEmail, setUserEmail] = useState('');
     const scanIntervalRef = useRef(null);
+    const autoScanIntervalRef = useRef(null);
 
     // Client ID and API key from the Google Developer Console
     const CLIENT_ID = '233852782558-clap8gucqoj6a38ltesa6tbiq1dsc82c.apps.googleusercontent.com';
@@ -267,6 +269,8 @@ const GmailTaskExtractor = ({ onExtractTasks, onUserAuth, onViewTasks, currentUs
         }
     }, [autoScanEnabled, isAuthorized, userInfo]);
 
+    // This section intentionally left empty - functions moved to a single location
+
     // Initialize the API client library
     const initializeGapiClient = async () => {
         console.log('Initializing GAPI client...');
@@ -515,9 +519,27 @@ const GmailTaskExtractor = ({ onExtractTasks, onUserAuth, onViewTasks, currentUs
         if (window.gapi.client.getToken() !== null) {
             window.google.accounts.oauth2.revoke(window.gapi.client.getToken().access_token);
             window.gapi.client.setToken('');
-            setIsAuthorized(false);
-            setEmails([]);
-            setExtractedTasks([]);
+        }
+        
+        // Clear token from localStorage
+        localStorage.removeItem('gmail_token');
+        localStorage.removeItem('gmail_user_email');
+        setIsAuthorized(false);
+        setUserEmail('');
+        setEmails([]);
+        setExtractedTasks([]);
+        setError(null);
+        clearInterval(autoScanIntervalRef.current);
+        autoScanIntervalRef.current = null;
+    };
+    
+    const handleLogout = () => {
+        // First sign out from Gmail
+        handleSignOutClick();
+        
+        // Then call the parent component's logout function if provided
+        if (onLogout) {
+            onLogout();
         }
     };
 
@@ -1182,66 +1204,24 @@ Current Date and Time (for reference): ${currentTimeISO}`
     return (
         <div className="gmail-task-extractor">
             <h2>Gmail Task Extractor</h2>
-            <div className="scan-status-container">
-                <div className="scan-status-header">
-                    <h3>Email Scanning Status</h3>
-                    <label className="auto-scan-toggle">
-                        <span>Auto-scan every 10 minutes:</span>
-                        <input 
-                            type="checkbox" 
-                            checked={autoScanEnabled} 
-                            onChange={() => setAutoScanEnabled(!autoScanEnabled)}
-                        />
-                        <span className="toggle-slider"></span>
-                    </label>
-                </div>
-                
-                {lastScanTime ? (
-                    <div>
-                        <p className="scan-status">
-                            <span className="scan-label">Last scan:</span> {formatLastScanTime(lastScanTime)}
-                        </p>
-                        <p className="scan-status">
-                            <span className="scan-label">Next automatic scan:</span> {autoScanEnabled ? getTimeUntilNextScan() : 'Disabled'}
-                        </p>
-                        <p className="scan-status">
-                            <span className="scan-label">Emails scanned:</span> {scannedEmails.length}
-                        </p>
-                        {autoScanEnabled && isAuthorized && (
-                            <p className="scan-status scan-status-auto">
-                                <span className="scan-icon">🔄</span> Automatic scanning is active. New emails will be checked every 10 minutes.
-                            </p>
-                        )}
-                    </div>
-                ) : (
-                    <p className="scan-status">No scans performed yet. {isAuthorized ? 'Click the scan button to start.' : 'Please authorize first.'}</p>
-                )}
-            </div>
+            
             {(isLoading || isScanning) && (
                 <div className="main-loading-indicator">
                     <div className="loading-spinner-large"></div>
-                    <div className="loading-status">{error}</div>
+                    {error && <div className="loading-message">{error}</div>}
                 </div>
             )}
             
-            {!apiInitialized ? (
-                <div className="loading-api">
-                    <p>Loading Google API...</p>
-                </div>
-            ) : !isAuthorized ? (
+            {!isAuthorized ? (
                 <div className="auth-section">
                     <p>Sign in with your Google account to extract tasks from your Gmail.</p>
-                    <button 
-                        className="gmail-button" 
-                        onClick={handleAuthClick}
-                        disabled={isLoading}
-                    >
-                        {isLoading ? "Signing in..." : "Sign in with Gmail"}
+                    <button className="gmail-auth-button" onClick={handleAuthClick}>
+                        Sign in with Gmail
                     </button>
-                    {authError && <p className="error-message">{authError}</p>}
+                    {authError && <div className="auth-error">{authError}</div>}
                 </div>
             ) : (
-                <div className="gmail-container">
+                <div className="gmail-authorized-container">
                     <div className="gmail-header">
                         <div className="gmail-actions">
                             <button 
@@ -1252,13 +1232,49 @@ Current Date and Time (for reference): ${currentTimeISO}`
                                 Fetch Emails & Extract Tasks
                             </button>
                             <button 
-                                className="gmail-button" 
-                                onClick={handleSignOutClick}
-                                disabled={isLoading || isScanning}
+                                className="logout-button" 
+                                onClick={handleLogout}
                             >
-                                Sign Out
+                                Logout
                             </button>
                         </div>
+                    </div>
+                    
+                    <div className="scan-status-container">
+                        <div className="scan-status-header">
+                            <h3>Email Scanning Status</h3>
+                            <label className="auto-scan-toggle">
+                                <span>Auto-scan every 10 minutes:</span>
+                                <input 
+                                    type="checkbox" 
+                                    checked={autoScanEnabled} 
+                                    onChange={() => setAutoScanEnabled(!autoScanEnabled)}
+                                />
+                                <span className="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        {lastScanTime ? (
+                            <div>
+                                <p className="scan-status">
+                                    <span className="scan-label">Last scan:</span> {formatLastScanTime(lastScanTime)}
+                                </p>
+                                <p className="scan-status">
+                                    <span className="scan-label">Next automatic scan:</span> {autoScanEnabled ? getTimeUntilNextScan() : 'Disabled'}
+                                </p>
+                                <p className="scan-status">
+                                    <span className="scan-label">Emails scanned:</span> {scannedEmails.length}
+                                </p>
+                                {autoScanEnabled && (
+                                    <p className="scan-status scan-status-auto">
+                                        <span className="scan-icon">🔄</span> Automatic scanning is active. New emails will be checked every 10 minutes.
+                                    </p>
+                                )}
+                            </div>
+                        ) : (
+                            <p className="scan-status">No scans performed yet. Click the scan button to start.</p>
+                        )}
+                    </div>
                     
                     <div className="gmail-content">
                         <div className="gmail-column">
@@ -1278,7 +1294,7 @@ Current Date and Time (for reference): ${currentTimeISO}`
                                 </div>
                             ) : !isLoading && (
                                 <div className="no-emails-message">
-                                    <p>No emails found. Click "Refresh Emails" to try again.</p>
+                                    <p>No emails found. Click "Fetch Emails & Extract Tasks" to try again.</p>
                                 </div>
                             )}
                         </div>
@@ -1307,11 +1323,10 @@ Current Date and Time (for reference): ${currentTimeISO}`
                                 </div>
                             ) : !isScanning && (
                                 <div className="no-tasks-message">
-                                    <p>No tasks have been extracted yet. Click "Scan Emails for Tasks" to analyze your emails.</p>
+                                    <p>No tasks have been extracted yet. Click "Fetch Emails & Extract Tasks" to analyze your emails.</p>
                                 </div>
                             )}
                         </div>
-                    </div>
                     </div>
                 </div>
             )}

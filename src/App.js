@@ -434,8 +434,8 @@ function App() {
                 <div className="header-right">
                     {currentUser && (
                         <div className="user-info">
-                            <span className="username">{currentUser.email}</span>
-                            <button className="logout-button" onClick={handleLogout}>Logout</button>
+                            {/* <span className="username">{currentUser.email}</span> */}
+                            {/* <button className="logout-button" onClick={handleLogout}>Logout</button> */}
                         </div>
                     )}
                     <Notifications tasks={tasks} currentUser={currentUser} />
@@ -495,7 +495,9 @@ function App() {
                             <GmailTaskExtractor 
                                 onExtractTasks={handleEmailTasks} 
                                 onUserAuth={handleUserAuth}
-                                onViewTasks={() => setActiveTab('list')}
+                                onViewTasks={() => setActiveTab('calendar')}
+                                currentUser={currentUser}
+                                onLogout={handleLogout}
                             />
                         )}
                         

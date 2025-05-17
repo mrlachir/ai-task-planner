@@ -386,6 +386,28 @@
     box-shadow: 0 2px 6px rgba(234, 67, 53, 0.3);
 }
 
+.logout-button {
+    background-color: #EA4335;
+    color: white;
+    margin-left: auto;
+    padding: 10px 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    border: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.logout-button:hover {
+    background-color: #d62516;
+    box-shadow: 0 2px 6px rgba(234, 67, 53, 0.3);
+}
+
 .small-spinner {
     border: 2px solid rgba(255, 255, 255, 0.3);
     width: 16px;
