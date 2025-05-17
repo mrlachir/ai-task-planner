@@ -1,482 +1,82 @@
 [
   {
-    "title": "Review Todoist's updated Terms of Service and Privacy Policy",
-    "description": "Todoist has updated its Terms of Service and Privacy Policy, effective May 25, 2025.  The updates clarify data lifecycle and ownership, retention periods, data management practices, AI technology usage, and improve language for clarity.",
-    "category": "Review",
+    "title": "Review LinkedIn Invitation",
+    "description": "Sami Reb has sent a LinkedIn connection request.",
+    "category": "Email",
     "urgency": 2,
-    "start_at": "2025-05-17T18:20:21Z",
-    "end_at": "2025-05-18T18:20:21Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Review and address 5 overdue tasks in Todoist",
-    "description": "Todoist daily digest indicates 5 overdue tasks. Review and reschedule, delegate, or delete tasks.",
-    "category": "Work",
-    "urgency": 4,
-    "start_at": "2025-05-17T18:20:21Z",
-    "end_at": "2025-05-18T18:20:21Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Check Google Account security",
-    "description": "Gmail Reader was granted access to your Google account. Check activity and secure your account if you did not grant access.",
-    "category": "Review",
-    "urgency": 5,
-    "start_at": "2025-05-17T18:20:21Z",
-    "end_at": "2025-05-18T18:20:21Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Explore Canva's new features",
-    "description": "Canva has launched new features including Canva Sheets and Canva Code. Explore these new tools to improve your workflow.",
-    "category": "Work",
-    "urgency": 3,
-    "start_at": "2025-05-17T18:20:21Z",
-    "end_at": "2025-05-18T18:20:21Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Check Google Account Activity",
-    "description": "Gmail Reader was granted access to your Google Account. Check this activity and secure your account.",
-    "category": "Email",
-    "urgency": 4,
-    "start_at": "2025-05-17T18:21:41Z",
-    "end_at": "2025-05-18T18:21:41Z",
+    "start_at": "2025-05-17T22:09:55Z",
+    "end_at": "2025-05-18T22:09:55Z",
     "deadline": "2025-05-17T23:59:59Z",
     "user_id": "1"
   },
   {
-    "title": "Check Google Account Security",
-    "description": "Gmail Reader was granted access to your linked Google Account. If you don't recognize this account, remove it.",
+    "title": "Review Codecademy Pro Offer",
+    "description": "Codecademy is offering 50% off Pro for a limited time.",
     "category": "Email",
-    "urgency": 4,
-    "start_at": "2025-05-17T18:21:41Z",
-    "end_at": "2025-05-18T18:21:41Z",
+    "urgency": 2,
+    "start_at": "2025-05-17T22:09:55Z",
+    "end_at": "2025-05-18T22:09:55Z",
     "deadline": "2025-05-17T23:59:59Z",
     "user_id": "1"
   },
   {
-    "title": "Review Google Account Security",
-    "description": "A new sign-in on Windows was detected. Check activity if it wasn't you.",
+    "title": "Review Jobuilder Recruitment Newsletter",
+    "description": "Newsletter from Jobuilder Cabinet de Recrutement with job opportunities.",
     "category": "Email",
     "urgency": 3,
-    "start_at": "2025-05-17T18:21:41Z",
-    "end_at": "2025-05-18T18:21:41Z",
+    "start_at": "2025-05-17T22:09:55Z",
+    "end_at": "2025-05-18T22:09:55Z",
     "deadline": "2025-05-17T23:59:59Z",
     "user_id": "1"
-  },
-  {
-    "title": "CRETE PFA",
-    "description": "Create PFA (further details needed)",
-    "category": "General",
-    "urgency": 5,
-    "start_at": "2025-05-17T18:23:25Z",
-    "end_at": "2025-05-17T19:23:25Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "1"
-  },
-  {
-    "title": "Review Todoist's updated Terms of Service and Privacy Policy",
-    "description": "Todoist has updated its Terms of Service and Privacy Policy, effective May 25, 2025.  The updates clarify data lifecycle and ownership policies, introduce clearer data retention periods, enhance data management practices, add information about AI technology usage, and improve language for clarity.",
-    "category": "Review",
-    "urgency": 2,
-    "start_at": "2025-05-17T18:27:11Z",
-    "end_at": "2025-05-18T18:27:11Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Review and address 5 overdue tasks in Todoist",
-    "description": "Todoist daily digest indicates 5 overdue tasks. Review and reschedule, delegate, or delete tasks as needed.",
-    "category": "Work",
-    "urgency": 4,
-    "start_at": "2025-05-17T18:27:11Z",
-    "end_at": "2025-05-18T18:27:11Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Check Google Account security",
-    "description": "A security alert from Google indicates that Gmail Reader was granted access to your Google Account. Check the activity and secure your account if you did not grant access.",
-    "category": "Work",
-    "urgency": 5,
-    "start_at": "2025-05-17T18:27:11Z",
-    "end_at": "2025-05-18T18:27:11Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Explore Canva's new features",
-    "description": "Canva email announces new features: Canva Sheets, Canva Code, and Visual Suite 2.0. Explore these new tools.",
-    "category": "Work",
-    "urgency": 3,
-    "start_at": "2025-05-17T18:27:11Z",
-    "end_at": "2025-05-18T18:27:11Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Review Todoist Terms of Service and Privacy Policy",
-    "description": "Todoist has updated its Terms of Service and Privacy Policy, effective May 25, 2025.  Review the changes regarding data lifecycle, ownership, retention periods, data management practices, AI technologies, and language clarity.",
-    "category": "Review",
-    "urgency": 3,
-    "start_at": "2025-05-17T18:29:28Z",
-    "end_at": "2025-05-18T18:29:28Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Address 5 Overdue Tasks in Todoist",
-    "description": "Todoist daily digest shows 5 overdue tasks. Review and reschedule, delegate, or delete tasks as needed.",
-    "category": "Work",
-    "urgency": 4,
-    "start_at": "2025-05-17T18:29:28Z",
-    "end_at": "2025-05-18T18:29:28Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Review Google Account Security",
-    "description": "A Gmail Reader application has been granted access to your Google account. Check your activity and secure your account if this was unauthorized.",
-    "category": "Review",
-    "urgency": 5,
-    "start_at": "2025-05-17T18:29:28Z",
-    "end_at": "2025-05-18T18:29:28Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Explore Canva's New Features",
-    "description": "Explore Canva Create's latest launches, including Canva Sheets, Canva Code, and Visual Suite 2.0.",
-    "category": "Work",
-    "urgency": 3,
-    "start_at": "2025-05-17T18:29:28Z",
-    "end_at": "2025-05-18T18:29:28Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Review Todoist's updated Terms of Service and Privacy Policy",
-    "description": "Todoist has updated its Terms of Service and Privacy Policy, effective May 25, 2025.  The updates clarify data lifecycle and ownership policies, introduce clearer data retention periods, enhance data management practices, add information about AI technology usage, and improve language for clarity.",
-    "category": "Review",
-    "urgency": 2,
-    "start_at": "2025-05-17T18:52:39Z",
-    "end_at": "2025-05-18T18:52:39Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Review and address 5 overdue tasks in Todoist",
-    "description": "There are 5 overdue tasks in Todoist.  Review and reschedule, delegate, or delete tasks.",
-    "category": "Work",
-    "urgency": 4,
-    "start_at": "2025-05-17T18:52:39Z",
-    "end_at": "2025-05-18T18:52:39Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Check Google Account Security",
-    "description": "Gmail Reader was granted access to your Google Account. Check this activity and secure your account if you did not grant access.",
-    "category": "Work",
-    "urgency": 5,
-    "start_at": "2025-05-17T18:52:39Z",
-    "end_at": "2025-05-18T18:52:39Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Explore Canva's new features",
-    "description": "Explore Canva's latest launches, including Canva Sheets and Canva Code.",
-    "category": "Work",
-    "urgency": 3,
-    "start_at": "2025-05-17T18:52:39Z",
-    "end_at": "2025-05-18T18:52:39Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Review Todoist's updated Terms of Service and Privacy Policy",
-    "description": "Todoist has updated its Terms of Service and Privacy Policy, effective May 25, 2025.  The updates clarify data lifecycle and ownership, introduce clearer data retention periods, enhance data management practices, add information about AI technology usage, and improve language for clarity.",
-    "category": "Review",
-    "urgency": 2,
-    "start_at": "2025-05-17T18:52:36Z",
-    "end_at": "2025-05-18T18:52:36Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Review and address 5 overdue tasks in Todoist",
-    "description": "Todoist daily digest indicates 5 overdue tasks. Review and reschedule, delegate, or delete tasks as needed.",
-    "category": "Work",
-    "urgency": 4,
-    "start_at": "2025-05-17T18:52:36Z",
-    "end_at": "2025-05-18T18:52:36Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Check Google Account Security",
-    "description": "Gmail Reader was granted access to your Google Account. If you did not grant access, check this activity and secure your account.",
-    "category": "Review",
-    "urgency": 5,
-    "start_at": "2025-05-17T18:52:36Z",
-    "end_at": "2025-05-18T18:52:36Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Explore Canva's new features",
-    "description": "Explore Canva Create's new launches: Canva Sheets, Canva Code, and Visual Suite 2.0.",
-    "category": "Work",
-    "urgency": 3,
-    "start_at": "2025-05-17T18:52:36Z",
-    "end_at": "2025-05-18T18:52:36Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Watch ilyaselmaliki's Kick stream",
-    "description": "ilyaselmaliki just went live on Kick!",
-    "category": "Work",
-    "urgency": 3,
-    "start_at": "2025-05-17T20:39:21Z",
-    "end_at": "2025-05-18T20:39:21Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "1"
-  },
-  {
-    "title": "View Hamza Ahmed's post on Skool",
-    "description": "Hamza Ahmed posted \"EVIL WOMAN\" on Skool.",
-    "category": "Work",
-    "urgency": 3,
-    "start_at": "2025-05-17T20:39:21Z",
-    "end_at": "2025-05-18T20:39:21Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "1"
-  },
-  {
-    "title": "Check Google Account Security",
-    "description": "Gmail Reader was granted access to your Google Account. Check activity and secure your account if you did not grant access.",
-    "category": "Review",
-    "urgency": 5,
-    "start_at": "2025-05-17T20:39:21Z",
-    "end_at": "2025-05-18T20:39:21Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "1"
-  },
-  {
-    "title": "Check Google Account Security for 911lachi@gmail.com",
-    "description": "Gmail Reader was granted access to your linked Google Account. Check activity and secure your account if you did not grant access.  If you don't recognize this account, remove it.",
-    "category": "Review",
-    "urgency": 5,
-    "start_at": "2025-05-17T20:39:21Z",
-    "end_at": "2025-05-18T20:39:21Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "1"
-  },
-  {
-    "title": "Watch ilyaselmaliki's Kick stream",
-    "description": "ilyaselmaliki just went live on Kick!",
-    "category": "Email",
-    "urgency": 3,
-    "start_at": "2025-05-17T20:39:24Z",
-    "end_at": "2025-05-18T20:39:24Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "1"
-  },
-  {
-    "title": "Review Hamza Ahmed's post",
-    "description": "Hamza Ahmed posted \"EVIL WOMAN\"",
-    "category": "Review",
-    "urgency": 3,
-    "start_at": "2025-05-17T20:39:24Z",
-    "end_at": "2025-05-18T20:39:24Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "1"
-  },
-  {
-    "title": "Secure Google Account",
-    "description": "Gmail Reader was granted access to your Google Account. Check activity and secure your account if you did not grant access.",
-    "category": "Work",
-    "urgency": 5,
-    "start_at": "2025-05-17T20:39:24Z",
-    "end_at": "2025-05-18T20:39:24Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "1"
-  },
-  {
-    "title": "Secure Google Account (911lachi@gmail.com)",
-    "description": "Gmail Reader was granted access to your linked Google Account (911lachi@gmail.com). Check activity and secure your account if you did not grant access.  If you don't recognize this account, remove it.",
-    "category": "Work",
-    "urgency": 5,
-    "start_at": "2025-05-17T20:39:24Z",
-    "end_at": "2025-05-18T20:39:24Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "1"
-  },
-  {
-    "title": "Review LinkedIn Newsletter",
-    "description": "Read the Jobuilder Cabinet de Recrutement newsletter from Jobs in Europe via LinkedIn.",
-    "category": "Review",
-    "urgency": 3,
-    "start_at": "2025-05-17T20:39:50Z",
-    "end_at": "2025-05-18T20:39:50Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
   },
   {
     "title": "Review Todoist Terms of Service and Privacy Policy Updates",
-    "description": "Review the updated Terms of Service and Privacy Policy for Todoist, effective May 25, 2025.",
+    "description": "Todoist has updated its Terms of Service and Privacy Policy, effective May 25, 2025.",
     "category": "Review",
-    "urgency": 3,
-    "start_at": "2025-05-17T20:39:50Z",
-    "end_at": "2025-05-18T20:39:50Z",
+    "urgency": 1,
+    "start_at": "2025-05-17T22:09:55Z",
+    "end_at": "2025-05-18T22:09:55Z",
     "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
+    "user_id": "1"
   },
   {
-    "title": "Address 5 Overdue Tasks in Todoist",
-    "description": "Review and take action on 5 overdue tasks in Todoist.",
-    "category": "Work",
-    "urgency": 5,
-    "start_at": "2025-05-17T20:39:50Z",
-    "end_at": "2025-05-18T20:39:50Z",
+    "title": "Review LinkedIn Invitation",
+    "description": "Sami Reb wants to connect on LinkedIn.",
+    "category": "Email",
+    "urgency": 2,
+    "start_at": "2025-05-17T22:09:58Z",
+    "end_at": "2025-05-18T22:09:58Z",
     "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
+    "user_id": "1"
   },
   {
-    "title": "Check Google Account Security",
-    "description": "Gmail Reader was granted access to your Google Account. Check activity and secure your account if you did not grant access.",
-    "category": "Work",
-    "urgency": 5,
-    "start_at": "2025-05-17T20:39:50Z",
-    "end_at": "2025-05-18T20:39:50Z",
+    "title": "Review Codecademy Pro Offer",
+    "description": "50% off Codecademy Pro until May 20, 2025.",
+    "category": "Email",
+    "urgency": 2,
+    "start_at": "2025-05-17T22:09:58Z",
+    "end_at": "2025-05-18T22:09:58Z",
     "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
+    "user_id": "1"
   },
   {
-    "title": "Review LinkedIn Job Newsletter",
-    "description": "Review the Jobuilder recruitment agency newsletter from LinkedIn.",
-    "category": "Work",
-    "urgency": 3,
-    "start_at": "2025-05-17T20:39:54Z",
-    "end_at": "2025-05-18T20:39:54Z",
+    "title": "Review Job Postings from Jobuilder",
+    "description": "Newsletter from Jobuilder recruitment agency.",
+    "category": "Email",
+    "urgency": 1,
+    "start_at": "2025-05-17T22:09:58Z",
+    "end_at": "2025-05-18T22:09:58Z",
     "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
+    "user_id": "1"
   },
   {
     "title": "Review Todoist Terms of Service and Privacy Policy Updates",
-    "description": "Review the updated Terms of Service and Privacy Policy for Todoist, effective May 25, 2025.",
+    "description": "Updated Terms of Service and Privacy Policy effective May 25, 2025.",
     "category": "Review",
     "urgency": 3,
-    "start_at": "2025-05-17T20:39:54Z",
-    "end_at": "2025-05-18T20:39:54Z",
+    "start_at": "2025-05-17T22:09:58Z",
+    "end_at": "2025-05-18T22:09:58Z",
     "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Review and Address Overdue Tasks in Todoist",
-    "description": "Review and take action (reschedule, delegate, or delete) on 5 overdue tasks in Todoist.",
-    "category": "Work",
-    "urgency": 4,
-    "start_at": "2025-05-17T20:39:54Z",
-    "end_at": "2025-05-18T20:39:54Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Check Google Account Security",
-    "description": "Check Google Account activity for unauthorized access after a security alert regarding Gmail Reader.",
-    "category": "Review",
-    "urgency": 5,
-    "start_at": "2025-05-17T20:39:54Z",
-    "end_at": "2025-05-18T20:39:54Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Review LinkedIn Job Newsletter",
-    "description": "Review the Jobuilder recruitment agency newsletter from LinkedIn.",
-    "category": "Work",
-    "urgency": 3,
-    "start_at": "2025-05-17T20:40:40Z",
-    "end_at": "2025-05-18T20:40:40Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Review Todoist Terms of Service and Privacy Policy Updates",
-    "description": "Review the updated Terms of Service and Privacy Policy for Todoist, effective May 25, 2025.",
-    "category": "Review",
-    "urgency": 3,
-    "start_at": "2025-05-17T20:40:40Z",
-    "end_at": "2025-05-18T20:40:40Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Review and Address 5 Overdue Tasks in Todoist",
-    "description": "Review and take action (reschedule, delegate, or delete) on 5 overdue tasks in Todoist.",
-    "category": "Work",
-    "urgency": 4,
-    "start_at": "2025-05-17T20:40:40Z",
-    "end_at": "2025-05-18T20:40:40Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Check Google Account Security",
-    "description": "Check Google Account activity for unauthorized access from Gmail Reader and secure account if necessary.",
-    "category": "Review",
-    "urgency": 5,
-    "start_at": "2025-05-17T20:40:40Z",
-    "end_at": "2025-05-18T20:40:40Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Review LinkedIn Newsletter",
-    "description": "Read the Jobuilder recruitment agency newsletter on LinkedIn.",
-    "category": "Review",
-    "urgency": 3,
-    "start_at": "2025-05-17T20:40:44Z",
-    "end_at": "2025-05-18T20:40:44Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Review Todoist Terms of Service and Privacy Policy Updates",
-    "description": "Review the updated Terms of Service and Privacy Policy for Todoist, effective May 25, 2025.",
-    "category": "Review",
-    "urgency": 3,
-    "start_at": "2025-05-17T20:40:44Z",
-    "end_at": "2025-05-18T20:40:44Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Review and Address Overdue Tasks in Todoist",
-    "description": "Review and take action (reschedule, delegate, or delete) on 5 overdue tasks in Todoist.",
-    "category": "Work",
-    "urgency": 5,
-    "start_at": "2025-05-17T20:40:44Z",
-    "end_at": "2025-05-18T20:40:44Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
-  },
-  {
-    "title": "Check Google Account Security",
-    "description": "Check Google account activity for unauthorized access.",
-    "category": "Work",
-    "urgency": 4,
-    "start_at": "2025-05-17T20:40:44Z",
-    "end_at": "2025-05-18T20:40:44Z",
-    "deadline": "2025-05-17T23:59:59Z",
-    "user_id": "2"
+    "user_id": "1"
   }
 ]

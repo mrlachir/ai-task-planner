@@ -434,8 +434,8 @@ function App() {
                 <div className="header-right">
                     {currentUser && (
                         <div className="user-info">
-                            {/* <span className="username">{currentUser.email}</span> */}
-                            {/* <button className="logout-button" onClick={handleLogout}>Logout</button> */}
+                            <span className="username">{currentUser.email}</span>
+                            <button className="logout-button" onClick={handleLogout}>Logout</button>
                         </div>
                     )}
                     <Notifications tasks={tasks} currentUser={currentUser} />
