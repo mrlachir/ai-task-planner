@@ -48,6 +48,7 @@ const dbDir = path.join(__dirname, 'src', 'db');
 const tasksFilePath = path.join(dbDir, 'tasks.json');
 const usersFilePath = path.join(dbDir, 'users.json');
 const notificationsFilePath = path.join(dbDir, 'notifications.json');
+const scansFilePath = path.join(dbDir, 'scans.json');
 
 log('DB directory path:', dbDir);
 log('Tasks file path:', tasksFilePath);
@@ -1267,29 +1268,141 @@ app.delete('/api/notifications', async (req, res) => {
     }
 });
 
+// API endpoint to get scan history
+app.get('/api/scans', (req, res) => {
+    try {
+        if (!fs.existsSync(scansFilePath)) {
+            log('Scans file does not exist, creating default file...');
+            const defaultScansData = {
+                lastScanTime: new Date().toISOString(),
+                scannedEmails: []
+            };
+            fs.writeFileSync(scansFilePath, JSON.stringify(defaultScansData, null, 2), 'utf8');
+        }
+        
+        const scansData = fs.readFileSync(scansFilePath, 'utf8');
+        const scans = JSON.parse(scansData);
+        log(`Returning scan history: ${JSON.stringify(scans)}`);
+        res.json(scans);
+    } catch (error) {
+        log(`Error getting scan history: ${error.message}`);
+        res.status(500).json({ error: 'Failed to get scan history' });
+    }
+});
+
+// API endpoint to update scan history
+app.post('/api/scans', (req, res) => {
+    try {
+        const { lastScanTime, scannedEmail } = req.body;
+        log(`Updating scan history with lastScanTime: ${lastScanTime}, scannedEmail: ${scannedEmail}`);
+        
+        if (!lastScanTime) {
+            return res.status(400).json({ error: 'lastScanTime is required' });
+        }
+        
+        // Read existing scan history
+        let scans = { lastScanTime: new Date().toISOString(), scannedEmails: [] };
+        if (fs.existsSync(scansFilePath)) {
+            const scansData = fs.readFileSync(scansFilePath, 'utf8');
+            try {
+                scans = JSON.parse(scansData);
+            } catch (parseError) {
+                log(`Error parsing scans JSON, resetting to default: ${parseError.message}`);
+            }
+        }
+        
+        // Update lastScanTime
+        scans.lastScanTime = lastScanTime;
+        
+        // Add scannedEmail to history if provided
+        if (scannedEmail) {
+            // Check if email already exists in history
+            const emailExists = scans.scannedEmails.some(email => 
+                email.id === scannedEmail.id || email.emailId === scannedEmail.emailId
+            );
+            
+            if (!emailExists) {
+                // Add timestamp to scannedEmail
+                scannedEmail.scannedAt = new Date().toISOString();
+                scans.scannedEmails.push(scannedEmail);
+                
+                // Keep only the last 100 scanned emails
+                if (scans.scannedEmails.length > 100) {
+                    scans.scannedEmails = scans.scannedEmails.slice(-100);
+                }
+            }
+        }
+        
+        // Save updated scan history
+        fs.writeFileSync(scansFilePath, JSON.stringify(scans, null, 2), 'utf8');
+        log(`Scan history updated successfully`);
+        res.json({ success: true, scans });
+    } catch (error) {
+        log(`Error updating scan history: ${error.message}`);
+        res.status(500).json({ error: 'Failed to update scan history' });
+    }
+});
+
+// API endpoint to check if an email has been scanned
+app.get('/api/scans/check', (req, res) => {
+    try {
+        const { emailId } = req.query;
+        log(`Checking if email ${emailId} has been scanned`);
+        
+        if (!emailId) {
+            return res.status(400).json({ error: 'emailId is required' });
+        }
+        
+        // Read scan history
+        if (!fs.existsSync(scansFilePath)) {
+            return res.json({ scanned: false });
+        }
+        
+        const scansData = fs.readFileSync(scansFilePath, 'utf8');
+        const scans = JSON.parse(scansData);
+        
+        // Check if email exists in history
+        const emailScanned = scans.scannedEmails.some(email => 
+            email.id === emailId || email.emailId === emailId
+        );
+        
+        log(`Email ${emailId} has${emailScanned ? '' : ' not'} been scanned before`);
+        res.json({ scanned: emailScanned });
+    } catch (error) {
+        log(`Error checking scan history: ${error.message}`);
+        res.status(500).json({ error: 'Failed to check scan history' });
+    }
+});
+
 app.listen(PORT, () => {
     log(`Server is running on port ${PORT}`);
-    log(`DB directory: ${dbDir}`);
-    log(`Tasks file path: ${tasksFilePath}`);
-    log(`Check if DB directory exists: ${fs.existsSync(dbDir)}`);
-    log(`Check if tasks.json exists: ${fs.existsSync(tasksFilePath)}`);
-    
-    // Force create directory and file if they don't exist
+    log('Initializing database...');
     if (!fs.existsSync(dbDir)) {
-        try {
-            fs.mkdirSync(dbDir, { recursive: true });
-            log('Created DB directory manually on server start');
-        } catch (error) {
-            log('Failed to create DB directory: ' + error.message);
-        }
+        log('DB directory does not exist, creating...');
+        fs.mkdirSync(dbDir, { recursive: true });
     }
-    
+
     if (!fs.existsSync(tasksFilePath)) {
-        try {
-            fs.writeFileSync(tasksFilePath, '[]', 'utf8');
-            log('Created tasks.json file manually on server start');
-        } catch (error) {
-            log('Failed to create tasks.json file: ' + error.message);
-        }
+        log('tasks.json file does not exist, creating empty file...');
+        fs.writeFileSync(tasksFilePath, '[]', 'utf8');
+    }
+
+    if (!fs.existsSync(usersFilePath)) {
+        log('users.json file does not exist, creating empty file...');
+        fs.writeFileSync(usersFilePath, '[]', 'utf8');
+    }
+
+    if (!fs.existsSync(notificationsFilePath)) {
+        log('notifications.json file does not exist, creating empty file...');
+        fs.writeFileSync(notificationsFilePath, '[]', 'utf8');
+    }
+
+    if (!fs.existsSync(scansFilePath)) {
+        log('scans.json file does not exist, creating default file...');
+        const defaultScansData = {
+            lastScanTime: new Date().toISOString(),
+            scannedEmails: []
+        };
+        fs.writeFileSync(scansFilePath, JSON.stringify(defaultScansData, null, 2), 'utf8');
     }
 });

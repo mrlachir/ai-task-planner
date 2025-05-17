@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import '../styles/GmailTaskExtractor.css';
 
@@ -11,6 +11,10 @@ const GmailTaskExtractor = ({ onExtractTasks, onUserAuth, onViewTasks, currentUs
     const [isScanning, setIsScanning] = useState(false);
     const [userInfo, setUserInfo] = useState(null);
     const [token, setToken] = useState(null);
+    const [lastScanTime, setLastScanTime] = useState(null);
+    const [scannedEmails, setScannedEmails] = useState([]);
+    const [autoScanEnabled, setAutoScanEnabled] = useState(true);
+    const scanIntervalRef = useRef(null);
 
     // Client ID and API key from the Google Developer Console
     const CLIENT_ID = '233852782558-clap8gucqoj6a38ltesa6tbiq1dsc82c.apps.googleusercontent.com';
@@ -37,6 +41,65 @@ const GmailTaskExtractor = ({ onExtractTasks, onUserAuth, onViewTasks, currentUs
 
     // Add delay function
     const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    
+    // Function to fetch scan history from the server
+    const fetchScanHistory = async () => {
+        try {
+            console.log('Fetching scan history from server...');
+            const response = await axios.get('http://localhost:3001/api/scans');
+            console.log('Scan history fetched:', response.data);
+            
+            if (response.data) {
+                setLastScanTime(response.data.lastScanTime);
+                setScannedEmails(response.data.scannedEmails || []);
+            }
+            
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching scan history:', error);
+            return { lastScanTime: new Date().toISOString(), scannedEmails: [] };
+        }
+    };
+    
+    // Function to update scan history on the server
+    const updateScanHistory = async (emailData = null) => {
+        try {
+            const currentTime = new Date().toISOString();
+            console.log('Updating scan history with time:', currentTime);
+            
+            const payload = {
+                lastScanTime: currentTime
+            };
+            
+            if (emailData) {
+                payload.scannedEmail = emailData;
+            }
+            
+            const response = await axios.post('http://localhost:3001/api/scans', payload);
+            console.log('Scan history updated:', response.data);
+            
+            // Update local state
+            setLastScanTime(currentTime);
+            
+            return response.data;
+        } catch (error) {
+            console.error('Error updating scan history:', error);
+            return null;
+        }
+    };
+    
+    // Function to check if an email has been scanned
+    const checkIfEmailScanned = async (emailId) => {
+        try {
+            console.log('Checking if email has been scanned:', emailId);
+            const response = await axios.get(`http://localhost:3001/api/scans/check?emailId=${emailId}`);
+            console.log('Email scan check result:', response.data);
+            return response.data.scanned;
+        } catch (error) {
+            console.error('Error checking if email has been scanned:', error);
+            return false;
+        }
+    };
 
     useEffect(() => {
         // Initialize Google APIs
@@ -59,6 +122,9 @@ const GmailTaskExtractor = ({ onExtractTasks, onUserAuth, onViewTasks, currentUs
         // Start initialization
         initializeGoogleAPIs();
         
+        // Fetch scan history when component mounts
+        fetchScanHistory();
+        
         // Set a timeout to check initialization status after 5 seconds
         const timeoutId = setTimeout(() => {
             if (!apiInitialized) {
@@ -67,9 +133,8 @@ const GmailTaskExtractor = ({ onExtractTasks, onUserAuth, onViewTasks, currentUs
                 if (!window.gapi) {
                     const gapiScript = document.createElement('script');
                     gapiScript.src = 'https://apis.google.com/js/api.js';
-                    gapiScript.async = true;
                     gapiScript.onload = () => {
-                        console.log('GAPI manually loaded, initializing client...');
+                        console.log('GAPI script loaded manually');
                         window.gapi.load('client', initializeGapiClient);
                     };
                     document.body.appendChild(gapiScript);
@@ -78,9 +143,8 @@ const GmailTaskExtractor = ({ onExtractTasks, onUserAuth, onViewTasks, currentUs
                 if (!window.google || !window.google.accounts) {
                     const gisScript = document.createElement('script');
                     gisScript.src = 'https://accounts.google.com/gsi/client';
-                    gisScript.async = true;
                     gisScript.onload = () => {
-                        console.log('GIS manually loaded, initializing...');
+                        console.log('GIS script loaded manually');
                         gisLoaded();
                     };
                     document.body.appendChild(gisScript);
@@ -90,8 +154,118 @@ const GmailTaskExtractor = ({ onExtractTasks, onUserAuth, onViewTasks, currentUs
         
         return () => {
             clearTimeout(timeoutId);
+            // Clean up any intervals when component unmounts
+            if (scanIntervalRef.current) {
+                clearInterval(scanIntervalRef.current);
+            }
         };
     }, []);
+
+    useEffect(() => {
+        if (autoScanEnabled && isAuthorized) {
+            console.log('Setting up automatic email scanning every 10 minutes');
+            
+            // Function to perform the automatic scan
+            const performAutoScan = async () => {
+                // Check if user is authorized
+                if (!isAuthorized || !userInfo || !userInfo.email) {
+                    console.log('User not authorized for auto-scanning');
+                    return;
+                }
+                
+                console.log('Auto-scanning for tasks...');
+                setIsScanning(true);
+                setError(<div className="loading-text"><span className="loading-spinner"></span>Auto-scanning for tasks...</div>);
+                
+                try {
+                    // Get emails from Gmail
+                    const response = await window.gapi.client.gmail.users.messages.list({
+                        'userId': 'me',
+                        'maxResults': 10, // Fetch 10 emails
+                        'q': 'in:inbox' // Only fetch inbox emails
+                    });
+                    
+                    if (!response || !response.result || !response.result.messages) {
+                        console.log('No emails found');
+                        setEmails([]);
+                        setIsScanning(false);
+                        setError("No emails found in your Gmail inbox.");
+                        return;
+                    }
+                    
+                    console.log(`Found ${response.result.messages.length} emails`);
+                    
+                    // Fetch detailed information for each email
+                    const emailPromises = response.result.messages.map(message => 
+                        window.gapi.client.gmail.users.messages.get({
+                            'userId': 'me',
+                            'id': message.id,
+                            'format': 'full'
+                        })
+                    );
+                    
+                    const emailResponses = await Promise.all(emailPromises);
+                    
+                    // Create serializable email objects to avoid circular references
+                    const parsedEmails = emailResponses.map(resp => {
+                        const emailDetails = parseEmailDetails(resp.result);
+                        return createSerializableEmail(emailDetails);
+                    });
+                    
+                    console.log('Emails fetched and parsed:', parsedEmails.length);
+                    setEmails(parsedEmails);
+                    
+                    // Process emails with Gemini AI
+                    setError(<div className="loading-text"><span className="loading-spinner"></span>Extracting tasks from emails...</div>);
+                    const tasks = await extractTasksWithGeminiAI(parsedEmails, userInfo.email);
+                    
+                    if (tasks && tasks.length > 0) {
+                        // Save the extracted tasks to the server
+                        setError(<div className="loading-text"><span className="loading-spinner"></span>Saving {tasks.length} extracted tasks...</div>);
+                        
+                        // Save tasks directly to tasks.json using axios
+                        const saveResponse = await axios.post('http://localhost:3001/api/tasks', { tasks: tasks });
+                        
+                        await delay(1500); // Wait 1.5 seconds after saving
+                        
+                        if (!saveResponse.data.success) {
+                            throw new Error(`Failed to save tasks: ${saveResponse.status}`);
+                        }
+                        
+                        console.log('Tasks saved successfully:', saveResponse.data);
+                        setExtractedTasks(tasks);
+                        setError(
+                            <div className="loading-text" style={{ backgroundColor: '#e6f4ea', color: '#0f9d58' }}>
+                                <span className="loading-spinner" style={{ borderColor: '#0f9d58 transparent #0f9d58 transparent' }}></span>
+                                Success! {tasks.length} tasks extracted and saved successfully!
+                            </div>
+                        );
+                    }
+                } catch (error) {
+                    console.error('Error auto-scanning for tasks:', error);
+                    setError(`Error auto-scanning for tasks: ${error.message}`);
+                } finally {
+                    setIsScanning(false);
+                    // Update the last scan time after each scan
+                    await updateScanHistory();
+                }
+            };
+            
+            // Run the scan immediately when user gets authorized
+            performAutoScan();
+            
+            // Set up interval to run every 10 minutes (600000 ms)
+            const intervalId = setInterval(performAutoScan, 10 * 60 * 1000);
+            scanIntervalRef.current = intervalId;
+            
+            return () => {
+                if (scanIntervalRef.current) {
+                    clearInterval(scanIntervalRef.current);
+                    scanIntervalRef.current = null;
+                }
+            };
+        }
+    }, [autoScanEnabled, isAuthorized, userInfo]);
 
     // Initialize the API client library
     const initializeGapiClient = async () => {
@@ -512,8 +686,36 @@ const GmailTaskExtractor = ({ onExtractTasks, onUserAuth, onViewTasks, currentUs
         try {
             console.log(`Processing ${emailsToProcess.length} emails for task extraction with Gemini AI`);
             
+            // Fetch current scan history
+            const scanHistory = await fetchScanHistory();
+            console.log('Current scan history:', scanHistory);
+            
+            // Filter out emails that have already been scanned
+            const unscannedEmails = [];
+            for (const email of emailsToProcess) {
+                const emailId = email.id || email.emailId;
+                const alreadyScanned = scanHistory.scannedEmails.some(scannedEmail => 
+                    scannedEmail.id === emailId || scannedEmail.emailId === emailId
+                );
+                
+                if (!alreadyScanned) {
+                    console.log(`Email ${emailId} has not been scanned before, adding to processing list`);
+                    unscannedEmails.push(email);
+                } else {
+                    console.log(`Email ${emailId} has already been scanned, skipping`);
+                }
+            }
+            
+            console.log(`Found ${unscannedEmails.length} unscanned emails out of ${emailsToProcess.length} total`);
+            
+            // If no unscanned emails, return empty array
+            if (unscannedEmails.length === 0) {
+                console.log('No new emails to scan, skipping Gemini AI processing');
+                return [];
+            }
+            
             // Create serializable email objects to avoid circular references
-            const serializableEmails = emailsToProcess.map(email => createSerializableEmail(email));
+            const serializableEmails = unscannedEmails.map(email => createSerializableEmail(email));
             
             // Combine all emails into one text for analysis
             const combinedEmailText = serializableEmails.map(email => {
@@ -598,6 +800,20 @@ Current Date and Time (for reference): ${currentTimeISO}`
                 }
                 
                 console.log('Extracted tasks from Gemini AI:', extractedTasks);
+                
+                // Update scan history for each processed email
+                for (const email of unscannedEmails) {
+                    const emailData = {
+                        id: email.id || email.emailId,
+                        subject: email.subject,
+                        from: email.from,
+                        scannedAt: new Date().toISOString()
+                    };
+                    
+                    // Record this email as scanned
+                    await updateScanHistory(emailData);
+                }
+                
                 return extractedTasks;
             } else {
                 console.error("Could not parse the analysis results from Gemini AI.");
@@ -780,7 +996,7 @@ Current Date and Time (for reference): ${currentTimeISO}`
     };
     
     const scanEmailsForTasks = async (userEmail = null) => {
-        console.log(`Starting email scan with ${emails.length} emails`);
+        console.log(`Starting manual email scan with ${emails.length} emails`);
         try {
             setIsScanning(true);
             setExtractedTasks([]);
@@ -800,6 +1016,9 @@ Current Date and Time (for reference): ${currentTimeISO}`
                     return false;
                 }
             }
+            
+            // Update the last scan time
+            await updateScanHistory();
             
             // Step 2: Get the latest 5 emails to process
             const emailsToProcess = emails.slice(0, 5);
@@ -913,9 +1132,91 @@ Current Date and Time (for reference): ${currentTimeISO}`
     };
 
     // Render the component
+    // Function to format the last scan time in a user-friendly way
+    const formatLastScanTime = (timeString) => {
+        if (!timeString) return 'Never';
+        
+        const scanTime = new Date(timeString);
+        const now = new Date();
+        const diffMs = now - scanTime;
+        
+        // If less than a minute ago
+        if (diffMs < 60000) {
+            return 'Just now';
+        }
+        
+        // If less than an hour ago
+        if (diffMs < 3600000) {
+            const minutes = Math.floor(diffMs / 60000);
+            return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+        }
+        
+        // If less than a day ago
+        if (diffMs < 86400000) {
+            const hours = Math.floor(diffMs / 3600000);
+            return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+        }
+        
+        // If more than a day ago
+        const days = Math.floor(diffMs / 86400000);
+        return `${days} day${days !== 1 ? 's' : ''} ago`;
+    };
+    
+    // Calculate time until next scan
+    const getTimeUntilNextScan = () => {
+        if (!lastScanTime) return 'Now';
+        
+        const currentTime = new Date().getTime();
+        const lastScanTimeMs = new Date(lastScanTime).getTime();
+        const tenMinutesMs = 10 * 60 * 1000; // 10 minutes in milliseconds
+        const timeSinceLastScan = currentTime - lastScanTimeMs;
+        
+        if (timeSinceLastScan >= tenMinutesMs) {
+            return 'Now';
+        }
+        
+        const timeUntilNextScan = Math.ceil((tenMinutesMs - timeSinceLastScan) / 60000);
+        return `${timeUntilNextScan} minute${timeUntilNextScan !== 1 ? 's' : ''}`;
+    };
+
     return (
         <div className="gmail-task-extractor">
             <h2>Gmail Task Extractor</h2>
+            <div className="scan-status-container">
+                <div className="scan-status-header">
+                    <h3>Email Scanning Status</h3>
+                    <label className="auto-scan-toggle">
+                        <span>Auto-scan every 10 minutes:</span>
+                        <input 
+                            type="checkbox" 
+                            checked={autoScanEnabled} 
+                            onChange={() => setAutoScanEnabled(!autoScanEnabled)}
+                        />
+                        <span className="toggle-slider"></span>
+                    </label>
+                </div>
+                
+                {lastScanTime ? (
+                    <div>
+                        <p className="scan-status">
+                            <span className="scan-label">Last scan:</span> {formatLastScanTime(lastScanTime)}
+                        </p>
+                        <p className="scan-status">
+                            <span className="scan-label">Next automatic scan:</span> {autoScanEnabled ? getTimeUntilNextScan() : 'Disabled'}
+                        </p>
+                        <p className="scan-status">
+                            <span className="scan-label">Emails scanned:</span> {scannedEmails.length}
+                        </p>
+                        {autoScanEnabled && isAuthorized && (
+                            <p className="scan-status scan-status-auto">
+                                <span className="scan-icon">🔄</span> Automatic scanning is active. New emails will be checked every 10 minutes.
+                            </p>
+                        )}
+                    </div>
+                ) : (
+                    <p className="scan-status">No scans performed yet. {isAuthorized ? 'Click the scan button to start.' : 'Please authorize first.'}</p>
+                )}
+            </div>
             {(isLoading || isScanning) && (
                 <div className="main-loading-indicator">
                     <div className="loading-spinner-large"></div>
