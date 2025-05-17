@@ -89,11 +89,19 @@ const Notifications = ({ tasks, currentUser }) => {
     if (userId) {
       fetchNotifications();
       
-      // Set up interval to check for new notifications every minute
-      const intervalId = setInterval(fetchNotifications, 60000);
+      // Set up interval to check for new notifications more frequently (every 15 seconds)
+      // This ensures new notifications from email or text extraction appear quickly
+      const intervalId = setInterval(fetchNotifications, 15000);
       return () => clearInterval(intervalId);
     }
   }, [userId]);
+  
+  // Also refresh notifications when tasks change
+  useEffect(() => {
+    if (userId && tasks && tasks.length > 0) {
+      fetchNotifications();
+    }
+  }, [tasks, userId]);
   
   // Check for upcoming tasks and create notifications
   useEffect(() => {

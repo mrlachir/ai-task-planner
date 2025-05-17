@@ -78,5 +78,85 @@
     "end_at": "2025-05-17T19:23:25Z",
     "deadline": "2025-05-17T23:59:59Z",
     "user_id": "1"
+  },
+  {
+    "title": "Review Todoist's updated Terms of Service and Privacy Policy",
+    "description": "Todoist has updated its Terms of Service and Privacy Policy, effective May 25, 2025.  The updates clarify data lifecycle and ownership policies, introduce clearer data retention periods, enhance data management practices, add information about AI technology usage, and improve language for clarity.",
+    "category": "Review",
+    "urgency": 2,
+    "start_at": "2025-05-17T18:27:11Z",
+    "end_at": "2025-05-18T18:27:11Z",
+    "deadline": "2025-05-17T23:59:59Z",
+    "user_id": "2"
+  },
+  {
+    "title": "Review and address 5 overdue tasks in Todoist",
+    "description": "Todoist daily digest indicates 5 overdue tasks. Review and reschedule, delegate, or delete tasks as needed.",
+    "category": "Work",
+    "urgency": 4,
+    "start_at": "2025-05-17T18:27:11Z",
+    "end_at": "2025-05-18T18:27:11Z",
+    "deadline": "2025-05-17T23:59:59Z",
+    "user_id": "2"
+  },
+  {
+    "title": "Check Google Account security",
+    "description": "A security alert from Google indicates that Gmail Reader was granted access to your Google Account. Check the activity and secure your account if you did not grant access.",
+    "category": "Work",
+    "urgency": 5,
+    "start_at": "2025-05-17T18:27:11Z",
+    "end_at": "2025-05-18T18:27:11Z",
+    "deadline": "2025-05-17T23:59:59Z",
+    "user_id": "2"
+  },
+  {
+    "title": "Explore Canva's new features",
+    "description": "Canva email announces new features: Canva Sheets, Canva Code, and Visual Suite 2.0. Explore these new tools.",
+    "category": "Work",
+    "urgency": 3,
+    "start_at": "2025-05-17T18:27:11Z",
+    "end_at": "2025-05-18T18:27:11Z",
+    "deadline": "2025-05-17T23:59:59Z",
+    "user_id": "2"
+  },
+  {
+    "title": "Review Todoist Terms of Service and Privacy Policy",
+    "description": "Todoist has updated its Terms of Service and Privacy Policy, effective May 25, 2025.  Review the changes regarding data lifecycle, ownership, retention periods, data management practices, AI technologies, and language clarity.",
+    "category": "Review",
+    "urgency": 3,
+    "start_at": "2025-05-17T18:29:28Z",
+    "end_at": "2025-05-18T18:29:28Z",
+    "deadline": "2025-05-17T23:59:59Z",
+    "user_id": "2"
+  },
+  {
+    "title": "Address 5 Overdue Tasks in Todoist",
+    "description": "Todoist daily digest shows 5 overdue tasks. Review and reschedule, delegate, or delete tasks as needed.",
+    "category": "Work",
+    "urgency": 4,
+    "start_at": "2025-05-17T18:29:28Z",
+    "end_at": "2025-05-18T18:29:28Z",
+    "deadline": "2025-05-17T23:59:59Z",
+    "user_id": "2"
+  },
+  {
+    "title": "Review Google Account Security",
+    "description": "A Gmail Reader application has been granted access to your Google account. Check your activity and secure your account if this was unauthorized.",
+    "category": "Review",
+    "urgency": 5,
+    "start_at": "2025-05-17T18:29:28Z",
+    "end_at": "2025-05-18T18:29:28Z",
+    "deadline": "2025-05-17T23:59:59Z",
+    "user_id": "2"
+  },
+  {
+    "title": "Explore Canva's New Features",
+    "description": "Explore Canva Create's latest launches, including Canva Sheets, Canva Code, and Visual Suite 2.0.",
+    "category": "Work",
+    "urgency": 3,
+    "start_at": "2025-05-17T18:29:28Z",
+    "end_at": "2025-05-18T18:29:28Z",
+    "deadline": "2025-05-17T23:59:59Z",
+    "user_id": "2"
   }
 ]
