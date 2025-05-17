@@ -8,6 +8,7 @@
     "@fullcalendar/interaction": "^6.1.17",
     "@fullcalendar/react": "^6.1.17",
     "@fullcalendar/timegrid": "^6.1.17",
+    "@google/generative-ai": "^0.24.1",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
@@ -46,6 +47,7 @@
       "last 1 safari version"
     ]
   },
+  "proxy": "http://localhost:3001",
   "devDependencies": {
     "concurrently": "^9.1.2"
   }

@@ -5,6 +5,7 @@ import TaskInput from './components/TaskInput';
 import TaskList from './components/TaskList';
 import TaskCalendar from './components/TaskCalendar';
 import Notifications from './components/Notifications';
+import GmailTaskExtractor from './components/GmailTaskExtractor';
 import './App.css';
 
 const apiKey = 'AIzaSyAbkug1K5m_SydfEaFA3PdeqtO6wESv9Cw'; // **REPLACE WITH YOUR ACTUAL API KEY**
@@ -16,7 +17,8 @@ function App() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [saveStatus, setSaveStatus] = useState('');
-    const [activeTab, setActiveTab] = useState('list'); // 'list' or 'calendar'
+    const [activeTab, setActiveTab] = useState('gmail');  // Default to 'gmail' tab
+    const [currentUser, setCurrentUser] = useState(null); // Track current user
 
     // Function to save tasks to the backend JSON file
     const saveTasksToBackend = async (tasksToSave) => {
@@ -49,14 +51,16 @@ function App() {
         }
     };
 
-    // Function to load tasks from the backend JSON file
-    const loadTasksFromBackend = async () => {
+    // Function to load tasks from the backend JSON file for a specific user
+    const loadTasksFromBackend = async (userId = null) => {
         try {
             setLoading(true);
             setError(null);
             console.log('Loading tasks from backend...');
             
-            const response = await axios.get('http://localhost:3001/api/tasks');
+            // If userId is provided, load tasks for that user
+            const url = userId ? `http://localhost:3001/api/tasks?user_id=${userId}` : 'http://localhost:3001/api/tasks';
+            const response = await axios.get(url);
             
             if (response.data) {
                 console.log(`Loaded ${response.data.length} tasks from backend`);
@@ -75,9 +79,37 @@ function App() {
         }
     };
 
-    // Load tasks when the component mounts
+    // Load current user and their tasks when the component mounts
     useEffect(() => {
-        loadTasksFromBackend();
+        const checkCurrentUser = async () => {
+            try {
+                // Check if there's a current user in localStorage
+                const savedUserId = localStorage.getItem('currentUserId');
+                
+                if (savedUserId) {
+                    // Fetch user details
+                    const userResponse = await axios.get(`http://localhost:3001/api/users/${savedUserId}`);
+                    if (userResponse.data) {
+                        setCurrentUser(userResponse.data);
+                        // Load tasks for this user
+                        loadTasksFromBackend(savedUserId);
+                    } else {
+                        // User not found, clear localStorage
+                        localStorage.removeItem('currentUserId');
+                    }
+                } else {
+                    // No user in localStorage, load default tasks
+                    loadTasksFromBackend();
+                }
+            } catch (error) {
+                console.error('Error checking current user:', error);
+                setError('Failed to load user data: ' + (error.response?.data?.error || error.message));
+                // Load default tasks on error
+                loadTasksFromBackend();
+            }
+        };
+        
+        checkCurrentUser();
     }, []);
 
     // Reference to store previous tasks length to detect newly added tasks by the AI
@@ -288,61 +320,204 @@ function App() {
         // Reset file input to allow importing the same file again if needed
         event.target.value = null;
     };
+    
+    // Handle user creation or login when Gmail is connected
+    const handleUserAuth = async (userEmail) => {
+        try {
+            console.log('Handling user authentication for email:', userEmail);
+            // Check if user with this email already exists
+            const response = await axios.get(`http://localhost:3001/api/users?email=${encodeURIComponent(userEmail)}`);
+            
+            let user;
+            
+            if (response.data && response.data.length > 0) {
+                // User exists, use this user
+                user = response.data[0];
+                console.log('Existing user found:', user);
+            } else {
+                // Create new user
+                console.log('Creating new user with email:', userEmail);
+                const newUserResponse = await axios.post('http://localhost:3001/api/users', {
+                    email: userEmail,
+                    created_at: new Date().toISOString()
+                });
+                
+                user = newUserResponse.data;
+                console.log('New user created:', user);
+            }
+            
+            // Set current user and save to localStorage
+            setCurrentUser(user);
+            localStorage.setItem('currentUserId', user.id);
+            console.log('Current user set to:', user.id);
+            
+            // Load tasks for this user
+            await loadTasksFromBackend(user.id);
+            
+            return user;
+        } catch (error) {
+            console.error('Error handling user authentication:', error);
+            setError('Failed to authenticate user: ' + (error.response?.data?.error || error.message));
+            return null;
+        }
+    };
+    
+    // Handle user logout
+    const handleLogout = () => {
+        setCurrentUser(null);
+        localStorage.removeItem('currentUserId');
+        setTasks([]);
+        setActiveTab('gmail');
+    };
+    
+    // Handle tasks extracted from Gmail emails
+    const handleEmailTasks = async (emailTasks, userEmail) => {
+        if (!emailTasks || emailTasks.length === 0) {
+            console.log('No tasks extracted from emails');
+            return;
+        }
+        
+        try {
+            console.log('Processing extracted email tasks with user email:', userEmail);
+            // Ensure we have a user for these tasks
+            let user = currentUser;
+            if (!user && userEmail) {
+                console.log('No current user, authenticating with email:', userEmail);
+                user = await handleUserAuth(userEmail);
+                if (!user) {
+                    throw new Error('Failed to authenticate user');
+                }
+            }
+            
+            if (!user) {
+                console.error('No user available for tasks');
+                setSaveStatus('Error: No user account available for tasks');
+                setTimeout(() => setSaveStatus(''), 3000);
+                return;
+            }
+            
+            // Add user_id to all tasks
+            const tasksWithUserId = emailTasks.map(task => ({
+                ...task,
+                user_id: user.id
+            }));
+            
+            console.log(`Adding tasks for user_id: ${user.id}`, tasksWithUserId);
+            setSaveStatus('Saving tasks from emails...');
+            
+            // Save the extracted tasks to the backend
+            const savedCount = await saveTasksToBackend(tasksWithUserId);
+            
+            if (savedCount > 0) {
+                setSaveStatus(`${savedCount} tasks from emails saved successfully!`);
+                // Switch to list tab to show the new tasks
+                setActiveTab('list');
+                
+                // Reload tasks to ensure we have the latest
+                await loadTasksFromBackend(user.id);
+            } else {
+                setSaveStatus('No new tasks from emails to save (possible duplicates)');
+            }
+            
+            setTimeout(() => setSaveStatus(''), 3000);
+        } catch (error) {
+            console.error('Error saving tasks from emails:', error);
+            setSaveStatus('Error saving tasks from emails: ' + error.message);
+            setTimeout(() => setSaveStatus(''), 3000);
+        }
+    };
 
     return (
         <div className="App">
             <header className="App-header">
                 <h1>AI Task Planner</h1>
                 <div className="header-right">
-                    <Notifications tasks={tasks} />
+                    {currentUser && (
+                        <div className="user-info">
+                            <span className="username">{currentUser.email}</span>
+                            <button className="logout-button" onClick={handleLogout}>Logout</button>
+                        </div>
+                    )}
+                    <Notifications tasks={tasks} currentUser={currentUser} />
                 </div>
             </header>
             <main>
-                <TaskInput onAnalyze={handleAnalyzeText} />
-                {/* { <p className="loading-message">Loading tasks...</p>} */}
-                {error && <p className="error-message">Error: {error}</p>}
-                {saveStatus && <p className="save-status-message">{saveStatus}</p>}
-                
-                <div className="tab-navigation">
-                    <button 
-                        className={`tab-button ${activeTab === 'list' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('list')}
-                    >
-                        Task List
-                    </button>
-                    <button 
-                        className={`tab-button ${activeTab === 'calendar' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('calendar')}
-                    >
-                        Calendar View
-                    </button>
-                </div>
-                
-                {activeTab === 'list' ? (
-                    <TaskList 
-                        tasks={tasks} 
-                        onUpdateTask={handleUpdateTask}
-                        onDeleteTask={handleDeleteTask}
-                    />
+                {!currentUser && activeTab !== 'gmail' ? (
+                    // If no user is logged in and not on Gmail tab, show message to connect Gmail first
+                    <div className="connect-gmail-prompt">
+                        <h2>Connect to Gmail First</h2>
+                        <p>Please connect your Gmail account to get started with AI Task Planner.</p>
+                        <button 
+                            className="connect-gmail-button"
+                            onClick={() => setActiveTab('gmail')}
+                        >
+                            Connect Gmail
+                        </button>
+                    </div>
                 ) : (
-                    <TaskCalendar tasks={tasks} />
+                    <>
+                        {currentUser && <TaskInput onAnalyze={handleAnalyzeText} />}
+                        {error && <p className="error-message">Error: {error}</p>}
+                        {saveStatus && <p className="save-status-message">{saveStatus}</p>}
+                        
+                        <div className="tab-navigation">
+                            <button 
+                                className={`tab-button ${activeTab === 'gmail' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('gmail')}
+                            >
+                                Gmail Tasks
+                            </button>
+                            <button 
+                                className={`tab-button ${activeTab === 'list' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('list')}
+                                disabled={!currentUser}
+                            >
+                                Task List
+                            </button>
+                            <button 
+                                className={`tab-button ${activeTab === 'calendar' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('calendar')}
+                                disabled={!currentUser}
+                            >
+                                Calendar View
+                            </button>
+                        </div>
+                        
+                        {activeTab === 'list' && currentUser ? (
+                            <TaskList 
+                                tasks={tasks} 
+                                onUpdateTask={handleUpdateTask}
+                                onDeleteTask={handleDeleteTask}
+                            />
+                        ) : activeTab === 'calendar' && currentUser ? (
+                            <TaskCalendar tasks={tasks} />
+                        ) : (
+                            <GmailTaskExtractor 
+                                onExtractTasks={handleEmailTasks} 
+                                onUserAuth={handleUserAuth}
+                                onViewTasks={() => setActiveTab('list')}
+                            />
+                        )}
+                        
+                        {currentUser && (
+                            <div className="actions-container">
+                                <button onClick={handleExportToFile} className="action-button export-button">
+                                    Export Current Tasks to File
+                                </button>
+                                <label htmlFor="import-file-input" className="action-button import-button">
+                                    Import Tasks from File
+                                </label>
+                                <input 
+                                    type="file" 
+                                    id="import-file-input" 
+                                    accept=".json" 
+                                    onChange={handleImportFromFile} 
+                                    style={{ display: 'none' }} 
+                                />
+                            </div>
+                        )}
+                    </>
                 )}
-                
-                <div className="actions-container">
-                    <button onClick={handleExportToFile} className="action-button export-button">
-                        Export Current Tasks to File
-                    </button>
-                    <label htmlFor="import-file-input" className="action-button import-button">
-                        Import Tasks from File
-                    </label>
-                    <input 
-                        type="file" 
-                        id="import-file-input" 
-                        accept=".json" 
-                        onChange={handleImportFromFile} 
-                        style={{ display: 'none' }} 
-                    />
-                </div>
             </main>
             <footer>
                 <p>&copy; {new Date().getFullYear()} AI Task Planner. All rights reserved.</p>

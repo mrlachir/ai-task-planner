@@ -1,38 +1,82 @@
 [
   {
-    "title": "Finish report",
-    "description": "Finish report",
+    "title": "Review Todoist's updated Terms of Service and Privacy Policy",
+    "description": "Todoist has updated its Terms of Service and Privacy Policy, effective May 25, 2025.  The updates clarify data lifecycle and ownership, retention periods, data management practices, AI technology usage, and improve language for clarity.",
+    "category": "Review",
+    "urgency": 2,
+    "start_at": "2025-05-17T18:20:21Z",
+    "end_at": "2025-05-18T18:20:21Z",
+    "deadline": "2025-05-17T23:59:59Z",
+    "user_id": "2"
+  },
+  {
+    "title": "Review and address 5 overdue tasks in Todoist",
+    "description": "Todoist daily digest indicates 5 overdue tasks. Review and reschedule, delegate, or delete tasks.",
+    "category": "Work",
+    "urgency": 4,
+    "start_at": "2025-05-17T18:20:21Z",
+    "end_at": "2025-05-18T18:20:21Z",
+    "deadline": "2025-05-17T23:59:59Z",
+    "user_id": "2"
+  },
+  {
+    "title": "Check Google Account security",
+    "description": "Gmail Reader was granted access to your Google account. Check activity and secure your account if you did not grant access.",
+    "category": "Review",
+    "urgency": 5,
+    "start_at": "2025-05-17T18:20:21Z",
+    "end_at": "2025-05-18T18:20:21Z",
+    "deadline": "2025-05-17T23:59:59Z",
+    "user_id": "2"
+  },
+  {
+    "title": "Explore Canva's new features",
+    "description": "Canva has launched new features including Canva Sheets and Canva Code. Explore these new tools to improve your workflow.",
+    "category": "Work",
+    "urgency": 3,
+    "start_at": "2025-05-17T18:20:21Z",
+    "end_at": "2025-05-18T18:20:21Z",
+    "deadline": "2025-05-17T23:59:59Z",
+    "user_id": "2"
+  },
+  {
+    "title": "Check Google Account Activity",
+    "description": "Gmail Reader was granted access to your Google Account. Check this activity and secure your account.",
+    "category": "Email",
+    "urgency": 4,
+    "start_at": "2025-05-17T18:21:41Z",
+    "end_at": "2025-05-18T18:21:41Z",
+    "deadline": "2025-05-17T23:59:59Z",
+    "user_id": "1"
+  },
+  {
+    "title": "Check Google Account Security",
+    "description": "Gmail Reader was granted access to your linked Google Account. If you don't recognize this account, remove it.",
+    "category": "Email",
+    "urgency": 4,
+    "start_at": "2025-05-17T18:21:41Z",
+    "end_at": "2025-05-18T18:21:41Z",
+    "deadline": "2025-05-17T23:59:59Z",
+    "user_id": "1"
+  },
+  {
+    "title": "Review Google Account Security",
+    "description": "A new sign-in on Windows was detected. Check activity if it wasn't you.",
+    "category": "Email",
+    "urgency": 3,
+    "start_at": "2025-05-17T18:21:41Z",
+    "end_at": "2025-05-18T18:21:41Z",
+    "deadline": "2025-05-17T23:59:59Z",
+    "user_id": "1"
+  },
+  {
+    "title": "CRETE PFA",
+    "description": "Create PFA (further details needed)",
     "category": "General",
     "urgency": 5,
-    "start_at": "2025-05-16T14:00:00.000Z",
-    "end_at": "2025-05-19T17:00:00.000Z",
-    "deadline": "2025-05-16T23:59:59.000Z"
-  },
-  {
-    "title": "Reply to John's email",
-    "description": "Reply to John's email",
-    "category": "General",
-    "urgency": 3,
-    "start_at": "2025-05-16T17:00:00.000Z",
-    "end_at": "2025-05-17T18:00:00.000Z",
-    "deadline": "2025-05-16T23:59:59.000Z"
-  },
-  {
-    "title": "Study session",
-    "description": "Study session",
-    "category": "General",
-    "urgency": 3,
-    "start_at": "2025-05-16T03:00:00.000Z",
-    "end_at": "2025-05-21T04:00:00.000Z",
-    "deadline": "2025-05-16T23:59:59.000Z"
-  },
-  {
-    "title": "Finish Project",
-    "description": "Complete the project.",
-    "category": "General",
-    "urgency": 4,
-    "start_at": "2025-05-19T05:00:00.000Z",
-    "end_at": "2025-05-19T07:00:00.000Z",
-    "deadline": "2025-05-16T23:59:59.000Z"
+    "start_at": "2025-05-17T18:23:25Z",
+    "end_at": "2025-05-17T19:23:25Z",
+    "deadline": "2025-05-17T23:59:59Z",
+    "user_id": "1"
   }
 ]
