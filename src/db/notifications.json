@@ -5,7 +5,7 @@
     "message": "\"Review LinkedIn Invitation\" has been added to your tasks",
     "type": "new-task",
     "time": "2025-05-17T21:10:11.318Z",
-    "read": false,
+    "read": true,
     "user_id": "1"
   },
   {
@@ -14,7 +14,7 @@
     "message": "\"Review Codecademy Pro Offer\" has been added to your tasks",
     "type": "new-task",
     "time": "2025-05-17T21:10:11.318Z",
-    "read": false,
+    "read": true,
     "user_id": "1"
   },
   {
@@ -23,7 +23,7 @@
     "message": "\"Review Jobuilder Recruitment Newsletter\" has been added to your tasks",
     "type": "new-task",
     "time": "2025-05-17T21:10:11.319Z",
-    "read": false,
+    "read": true,
     "user_id": "1"
   },
   {
@@ -32,7 +32,7 @@
     "message": "\"Review Todoist Terms of Service and Privacy Policy Updates\" has been added to your tasks",
     "type": "new-task",
     "time": "2025-05-17T21:10:11.319Z",
-    "read": false,
+    "read": true,
     "user_id": "1"
   },
   {
@@ -42,7 +42,7 @@
     "type": "reminder",
     "reminderTime": "1hour",
     "time": "2025-05-17T21:10:11.321Z",
-    "read": false,
+    "read": true,
     "user_id": "1"
   },
   {
@@ -52,7 +52,7 @@
     "type": "reminder",
     "reminderTime": "1hour",
     "time": "2025-05-17T21:10:11.322Z",
-    "read": false,
+    "read": true,
     "user_id": "1"
   },
   {
@@ -62,7 +62,7 @@
     "type": "reminder",
     "reminderTime": "1hour",
     "time": "2025-05-17T21:10:11.323Z",
-    "read": false,
+    "read": true,
     "user_id": "1"
   },
   {
@@ -72,7 +72,7 @@
     "type": "reminder",
     "reminderTime": "1hour",
     "time": "2025-05-17T21:10:11.323Z",
-    "read": false,
+    "read": true,
     "user_id": "1"
   },
   {
@@ -81,7 +81,7 @@
     "message": "\"Review Job Postings from Jobuilder\" has been added to your tasks",
     "type": "new-task",
     "time": "2025-05-17T21:10:13.682Z",
-    "read": false,
+    "read": true,
     "user_id": "1"
   },
   {
@@ -91,7 +91,7 @@
     "type": "reminder",
     "reminderTime": "1hour",
     "time": "2025-05-17T21:10:13.683Z",
-    "read": false,
+    "read": true,
     "user_id": "1"
   },
   {
@@ -101,7 +101,7 @@
     "type": "reminder",
     "reminderTime": "1hour",
     "time": "2025-05-17T21:10:13.684Z",
-    "read": false,
+    "read": true,
     "user_id": "1"
   },
   {
@@ -111,7 +111,7 @@
     "type": "reminder",
     "reminderTime": "1hour",
     "time": "2025-05-17T21:10:13.684Z",
-    "read": false,
+    "read": true,
     "user_id": "1"
   },
   {
@@ -121,7 +121,7 @@
     "type": "reminder",
     "reminderTime": "1hour",
     "time": "2025-05-17T21:10:13.685Z",
-    "read": false,
+    "read": true,
     "user_id": "1"
   }
 ]
